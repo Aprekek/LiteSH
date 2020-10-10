@@ -30,6 +30,21 @@ void SetSigActionToDefault(const int setSignal)
 }
 //signal(SIGTSTP, SignalHandler);
 
+//Если группа процессов запускается как фоновое задание, оболочка сама должна оставаться на переднем плане и продолжать читать команды с терминала.
+
+/* Put a job in the background.  If the cont argument is true, send
+   the process group a SIGCONT signal to wake it up.  */
+
+void putJobBackground (job *j, int cont)
+{
+  /* Send the job a continue signal, if necessary.  */
+  if (cont)//0 or 1
+    if (kill (-j->pgid, SIGCONT) < 0)
+      perror ("kill (SIGCONT)");
+}
+
+
+
 int main()
 {
     signal(SIGINT, handler);//Прерывание CTRL+C
