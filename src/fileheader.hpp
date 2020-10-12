@@ -24,6 +24,7 @@ void Help();
 
 int launchLab2();
 int spawnProcess();
-
+void signal_handler( int signal_num );
+void catchSignal (); 
 
 #endif
