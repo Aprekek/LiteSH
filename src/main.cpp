@@ -32,7 +32,8 @@ int main(int argc, char* argv[]) {
                 if (spawnProcess() != 0)
                     cout << "Error" << endl;
             } else if (str == "3") {
-
+                if (spawnProcessFone() != 0)
+                    cout << "Error" << endl;
             } else if (str == "4") {
 
             } else {
