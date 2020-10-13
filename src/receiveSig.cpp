@@ -1,17 +1,12 @@
-#include <iostream>
-#include <csignal>
-#include <iostream> 
-#include <csignal> 
-#include <unistd.h>
-using namespace std; 
+#include "fileheader.hpp"
 
 //Получение сигналов
-void signal_handler( int signal_num ) 
+void signal_handler(int signal_num) 
 { 
    cout << "The interrupt signal is (" << signal_num << "). \n"; 
 } 
   
-void catchSignal () 
+void catchSignal() 
 {
    int i=0, a=0;
    signal(SIGABRT, signal_handler);   

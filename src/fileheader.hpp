@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <csignal>
 
 using namespace std;
 
@@ -24,6 +25,10 @@ void Help();
 
 int launchLab2();
 int spawnProcess();
+int spawnProcessFone();
+
+void catchSignal();
+void signal_handler(int signal_num);
 
 
 #endif
