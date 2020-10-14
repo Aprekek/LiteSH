@@ -150,3 +150,53 @@ void QueueRemove(int uid)
             }
     pthread_mutex_unlock(&clientsMutex);
 }
+
+int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq)
+{
+    int res = pthread_create(thread, attr, start_routine, arq);
+    if (res != 0)
+    {
+        perror("pthread_create failed\n");
+        exit(1);
+    }
+    return res;
+}
+
+void *handleClient(void *arg)
+{
+    char buf[Buffer_size];
+    char name[NAME_LEN];
+    int leaveFlags;
+
+    cliCount++;
+    clients *cli = (clients *)arg;
+
+    if(recv(cli->sockfd, name, NAME_LEN, 0) <= 0 || strlen(name) <  2 || strlen(name) >= NAME_LEN-1)
+    {
+		printf("Didn't enter the name.\n");
+		leaveFlags = 1;
+	} 
+    else
+    {
+		strcpy(cli->name, name);
+		sprintf(buf, "%s has joined\n", cli->name);
+		printf("%s", buf);
+		sendMessage(buf, cli->uid);
+	}
+
+	bzero(buf, Buffer_size);
+
+    while(1)
+    {
+        //Туточки будет код взаимодействия клиента с сервером
+    }
+
+    close(cli->sockfd);
+    QueueRemove(cli->uid);
+    free(cli);
+    cliCount--;
+    pthread_detach(pthread_self());
+
+    return 0;
+
+}
