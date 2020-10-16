@@ -1,5 +1,5 @@
 #include "Clieserv.h" 
-#include "Clieserv.c"
+#include "process.h"
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 

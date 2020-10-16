@@ -1,7 +1,4 @@
-#ifndef CLIESERV_C
-#define CLIESERV_C
-
-#include "Clieserv.h" 
+#include "Clieserv.h"
 
 clients *Clients[MAX_CLIENT];
 

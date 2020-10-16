@@ -25,11 +25,7 @@ typedef struct
     char name [NAME_LEN];
 } clients;
 
-int flag = 0;
-int sockfd = 0;
 char name[32];
-
-
 
 static int cliCount = 0;
 static int uid = 10;
@@ -49,7 +45,5 @@ void AddInQueue(clients *cl);
 int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq);
 void *handleClient();
 int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq);
-
-
 
 #endif
