@@ -1,3 +1,4 @@
+#include <iostream>
 #include "fileheader.hpp"
 
 using namespace std;
@@ -17,20 +18,23 @@ void printArguments()
 {
   cout << "--help"<<endl;
 	cout << "-h"<<endl;
-	cout << "-l2 - Calling a line for entering project call commands"<<endl;
-	cout << "-p - A product of the process by its name"<<endl;
-	cout << "-pb - Putting the process in the background mode"<<endl;
-	cout << "-signal - Signals from external progmans or OS"<<endl;
+	cout << "-m - Move files"<<endl;
+	cout << "-c - Copying file"<<endl;
+	cout << "-d - File deletion"<<endl;
+	cout << "-s - Calculating the total size of the specified directory or file"<<endl;
+	cout << "-af - Displaying all files in the specified directory"<<endl;
+	cout << "-ap - Displaying all processes from the procfs file system"<<endl;
 }
 
 void printReadme()
 {
     cout << "This program performs the following functions:"<<endl<< 
-    "*calling a line for entering project call commands;"<<endl<<  
-    "*a product of the process by its name;" <<endl<<  
-    "*return to the command line;"<<endl<<
-    "*putting the process in the background mode; "<<endl<<
-    "*receive and process signals from external programs and the operating system;" <<endl<<
+    "*copying a file;"<<endl<<  
+    "*moving a file;" <<endl<<  
+    "*deleting a file;"<<endl<<
+    "*calculating the total size of a directory or file; "<<endl<<
+    "*displaying all file system processes;" <<endl<<
+    "*displaying all files in a directory."<<endl<<
     "Check the appropriate arguments before starting!"<<endl;
 }
 
