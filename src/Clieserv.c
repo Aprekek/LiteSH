@@ -185,7 +185,19 @@ void *handleClient(void *arg)
 
     while(1)
     {
-        //Туточки будет код взаимодействия клиента с сервером
+	if ( fork() )
+		close(cli->uid);
+	else
+	{
+		close(sd); /* клиенту не нужен доступ к сокету */
+		dup2(cli->uid, 0); /* замещаем поток stdin */ //cli->name(?)
+		dup2(cli->uid, 1); /* замещаем поток stdout */
+		dup2(cli->uid, 2); /* замещаем поток stderr */
+		execl("/", "/", 0);
+		perror("Exec failed!"); /* что-то случилось */
+	}
+	
+        
     }
 
     close(cli->sockfd);
