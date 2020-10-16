@@ -185,8 +185,19 @@ void *handleClient(void *arg)
 
     while(1)
     {
-	if ( fork() )
-		close(cli->uid);
+	 if (leaveFlags)
+          break;
+	else if (strcmp(buf, "exit") == 0)
+        {
+            sprintf(buf, "%s has left\n", cli->name);
+            printf("%s", buf);
+            sendMessage(buf, cli->uid);
+            leaveFlags = 1;
+        }
+      
+	else if ( fork() )
+	   close(cli->uid);
+	   //FIXME
 	else
 	{
 		close(sd); /* клиенту не нужен доступ к сокету */
@@ -197,6 +208,11 @@ void *handleClient(void *arg)
 		perror("Exec failed!"); /* что-то случилось */
 	}
 	
+	else 
+        {
+            printf("-1\n");
+            leaveFlags = 1;
+        }
         
     }
 
