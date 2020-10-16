@@ -56,7 +56,7 @@ int spawnProcessFone() {
         _exit (EXIT_FAILURE);
     } else if (pid < 0)
         status = -1;
-    else if (waitpid(pid, &status, WHOHANG) != 0)
+    else if (waitpid(pid, &status, WNOHANG) != 0)
         status = -1;
 
     return status;
@@ -64,20 +64,21 @@ int spawnProcessFone() {
 
 
 
-void signal_handler( int signal_num ) 
+void signal_handler(int signal_num) 
 { 
-   cout << "The interrupt signal is (" << signal_num << "). \n"; 
+    cout << "The interrupt signal is (" << signal_num << "). \n"; 
 } 
   
-void catchSignal () 
+void catchSignal() 
 {
-   signal(SIGABRT, signal_handler);   
-  // register signal SIGABRT and signal handler   
-   cout << "How many signal you want gives?\n";
-   cin >> a; 
-   while(i!=a)
-   { 
-      cout << "Signal Handled" << endl;
-       i++;
-   }
+    int a, i = 0;
+    signal(SIGABRT, signal_handler);   
+    // register signal SIGABRT and signal handler   
+    cout << "How many signal you want gives?\n";
+    cin >> a; 
+    while(i!=a)
+    { 
+        cout << "Signal Handled" << endl;
+        i++;
+    }
 }

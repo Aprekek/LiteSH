@@ -17,12 +17,10 @@ void printArguments()
 {
   cout << "--help"<<endl;
 	cout << "-h"<<endl;
-	cout << "-c - Calling a line for entering project call commands"<<endl;
+	cout << "-l2 - Calling a line for entering project call commands"<<endl;
 	cout << "-p - A product of the process by its name"<<endl;
-	cout << "-cmd - Return to the command line"<<endl;
-	cout << "-bm - Putting the process in the background mode"<<endl;
-	cout << "-expr - Signals from external progmans"<<endl;
-	cout << "-os - Signals from the OS"<<endl;
+	cout << "-pb - Putting the process in the background mode"<<endl;
+	cout << "-signal - Signals from external progmans or OS"<<endl;
 }
 
 void printReadme()
