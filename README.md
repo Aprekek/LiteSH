@@ -24,7 +24,7 @@
 <br> *укажите путь, где запустить процесс
 <br>✑ перевод заданного процесса в фоновый режим;
 <br> *укажите имя или путь до процесса
-<br>✑ отображение сигналов вашей ОС;
+<br>✑ отображение сигналов вашей ОС.
 
 <br>⌨ Сборка и запуск проекта осуществляется следующим образом:
 ><br> $ make
@@ -36,7 +36,7 @@
 ><br> l2 - Calling a line for entering project call commands;
 ><br>-p - A product of the process by its name;
 ><br>-pb - Putting the process in the background mode;
-><br>-signal - Signals from external progmans or OS;***
+><br>-signal - Signals from external progmans or OS.
 
 ☛ Над проектом работали: ☚
 <br>• Пинов Даниил Игоревич
