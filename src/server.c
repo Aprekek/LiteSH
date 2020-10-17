@@ -28,34 +28,46 @@ int main(int argc, char *argv[])
 
     Listen(server, 5);
 
-    printf("\n**********Welcome**********\n");
+    socklen_t clieLen = sizeof(clientAddr);
+    connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
 
-    while (1)
-    {
-        socklen_t clieLen = sizeof(clientAddr);
-        connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
-
-        if((cliCount +1) == MAX_CLIENT)
-        {
-            printf("Maximum client connected. Connection Rejected\n");
-            printIpAddr(clientAddr);
-            printf(":%d\n", clientAddr.sin_port);
-			close(connfd);
-			continue;
-        }
-
-        clients *cli = (clients *)malloc(sizeof(clients));
-        cli->addres = clientAddr;
-        cli->sockfd = connfd;
-        cli->uid = uid++;
-
-        //Add client to queue
-        AddInQueue(cli);
-        Pthread_create(&tid, NULL, &handleClient, (void *)cli);
-
-        sleep(1);
+    while (1) {
+        char buf[256];
+        ssize_t nread;
+        nread = read(connfd, buf, 256);
+        write(STDOUT_FILENO, buf, nread);
+        write(connfd, buf, nread);
 
     }
+
+    close(connfd);
+    close(server);
+
+    // while (1)
+    // {
+    //     socklen_t clieLen = sizeof(clientAddr);
+    //     connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
+
+    //     if((cliCount +1) == MAX_CLIENT)
+    //     {
+    //         printf("Maximum client connected. Connection Rejected\n");
+    //         printIpAddr(clientAddr);
+    //         printf(":%d\n", clientAddr.sin_port);
+	// 		close(connfd);
+	// 		continue;
+    //     }
+
+    //     clients *cli = (clients *)malloc(sizeof(clients));
+    //     cli->addres = clientAddr;
+    //     cli->sockfd = connfd;
+    //     cli->uid = uid++;
+
+    //     //Add client to queue
+    //     //AddInQueue(cli);
+
+    //     sleep(1);
+
+    // }
     
     return 0;
 }

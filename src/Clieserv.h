@@ -25,11 +25,10 @@ typedef struct
     char name [NAME_LEN];
 } clients;
 
-char name[32];
+
 
 static int cliCount = 0;
 static int uid = 10;
-pthread_mutex_t clientsMutex = PTHREAD_MUTEX_INITIALIZER;
 
 int Socket(int domain, int type, int protocol);
 void Bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);

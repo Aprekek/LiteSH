@@ -119,109 +119,69 @@ void str_trim_lf (char* arr, int length)
   
 }
 
-void AddInQueue(clients *cl)
-{
-    pthread_mutex_lock(&clientsMutex);
+// void *handleClient(void *arg)
+// {
+//     char buf[Buffer_size];
+//     char name[NAME_LEN];
+//     int leaveFlags;
 
-    for (int i = 0; i < MAX_CLIENT; i++)
-        if (!Clients[i])
-        {
-            Clients[i] = cl;
-            break;
-        }
+//     cliCount++;
+//     clients *cli = (clients *)arg;
 
+//     if(recv(cli->sockfd, name, NAME_LEN, 0) <= 0 || strlen(name) <  2 || strlen(name) >= NAME_LEN-1)
+//     {
+// 		printf("Didn't enter the name.\n");
+// 		leaveFlags = 1;
+// 	} 
+//     else
+//     {
+// 		strcpy(cli->name, name);
+// 		sprintf(buf, "%s has joined\n", cli->name);
+// 		printf("%s", buf);
+// 		//sendMessage(buf, cli->uid);
+// 	}
 
-    pthread_mutex_unlock(&clientsMutex);
-}
+// 	bzero(buf, Buffer_size);
 
-void QueueRemove(int uid)
-{
-    pthread_mutex_lock(&clientsMutex);
-
-    for (int i = 0; i < MAX_CLIENT; i++)
-        if (Clients[i])
-            if (Clients[i]->uid == uid)
-            {
-                Clients[i] = NULL;
-                break;
-            }
-    pthread_mutex_unlock(&clientsMutex);
-}
-
-int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq)
-{
-    int res = pthread_create(thread, attr, start_routine, arq);
-    if (res != 0)
-    {
-        perror("pthread_create failed\n");
-        exit(1);
-    }
-    return res;
-}
-
-void *handleClient(void *arg)
-{
-    char buf[Buffer_size];
-    char name[NAME_LEN];
-    int leaveFlags;
-
-    cliCount++;
-    clients *cli = (clients *)arg;
-
-    if(recv(cli->sockfd, name, NAME_LEN, 0) <= 0 || strlen(name) <  2 || strlen(name) >= NAME_LEN-1)
-    {
-		printf("Didn't enter the name.\n");
-		leaveFlags = 1;
-	} 
-    else
-    {
-		strcpy(cli->name, name);
-		sprintf(buf, "%s has joined\n", cli->name);
-		printf("%s", buf);
-		sendMessage(buf, cli->uid);
-	}
-
-	bzero(buf, Buffer_size);
-
-    while(1)
-    {
-	 if (leaveFlags)
-          break;
-	else if (strcmp(buf, "exit") == 0)
-        {
-            sprintf(buf, "%s has left\n", cli->name);
-            printf("%s", buf);
-            sendMessage(buf, cli->uid);
-            leaveFlags = 1;
-        }
+//     while(1)
+//     {
+// 	 if (leaveFlags)
+//           break;
+// 	else if (strcmp(buf, "exit") == 0)
+//         {
+//             sprintf(buf, "%s has left\n", cli->name);
+//             printf("%s", buf);
+//             //sendMessage(buf, cli->uid);
+//             leaveFlags = 1;
+//         }
       
-	else if ( fork() )
-	   close(cli->uid);
-	   //FIXME
-	else
-	{
-		close(sd); /* клиенту не нужен доступ к сокету */
-		dup2(cli->uid, 0); /* замещаем поток stdin */ //cli->name(?)
-		dup2(cli->uid, 1); /* замещаем поток stdout */
-		dup2(cli->uid, 2); /* замещаем поток stderr */
-		execl("/", "/", 0);
-		perror("Exec failed!"); /* что-то случилось */
-	}
+// 	else if ( fork() )
+// 	   close(cli->uid);
+// 	   //FIXME
+// 	else if
+// 	{
+// 		close(sd); /* клиенту не нужен доступ к сокету */
+// 		dup2(cli->uid, 0); /* замещаем поток stdin */ //cli->name(?)
+// 		dup2(cli->uid, 1); /* замещаем поток stdout */
+// 		dup2(cli->uid, 2); /* замещаем поток stderr */
+// 		execl("/", "/", 0);
+// 		perror("Exec failed!"); /* что-то случилось */
+// 	}
 	
-	else 
-        {
-            printf("-1\n");
-            leaveFlags = 1;
-        }
+// 	else 
+//         {
+//             printf("-1\n");
+//             leaveFlags = 1;
+//         }
         
-    }
+//     }
 
-    close(cli->sockfd);
-    QueueRemove(cli->uid);
-    free(cli);
-    cliCount--;
-    pthread_detach(pthread_self());
+//     close(cli->sockfd);
+//     QueueRemove(cli->uid);
+//     free(cli);
+//     cliCount--;
+//     pthread_detach(pthread_self());
 
-    return 0;
+//     return 0;
 
-}
+// }

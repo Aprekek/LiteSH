@@ -1,12 +1,29 @@
 #include "process.h"
 
-int launchLab2() {
+int launchLab2(char *str) {
     const char *path = "./filesystem/project";
-    char *str;
-    str = (char*)malloc(sizeof(char) * 256);
+    char *key;
+    key = (char*)malloc(sizeof(char) * 32);
     int status;
     pid_t pid;
     pid = fork();
+
+    if (str == "move")
+        key = "-m";
+    else if (str == "copy")
+        key = "-c";
+    else if (str == "delete")
+        key = "-d";
+    else if (str == "size")
+        key = "-s";
+    else if (str == "display all files")
+        key = "-af";
+    else if (str == "display procfs")
+        key = "ap";
+    else {
+        cout << "Incorrect argument" << endl;
+        return -1;
+    } 
 
     if (pid == 0) {
         cout << "Enter argument: ";

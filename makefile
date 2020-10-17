@@ -13,7 +13,7 @@ $(PATH_BUILD_SRC)Clieserv.o: $(PATH_SRC)Clieserv.c
 	g++ -Wall -c $(PATH_SRC)Clieserv.c -o $(PATH_BUILD_SRC)Clieserv.o
 
 $(PATH_BUILD_SRC)server.o: $(PATH_SRC)server.c
-	gcc -Wall -c $(PATH_SRC)server.c -o $(PATH_BUILD_SRC)server.o
+	g++ -Wall -c $(PATH_SRC)server.c -o $(PATH_BUILD_SRC)server.o
 
 $(PATH_BUILD_SRC)client.o: $(PATH_SRC)client.c
 	g++ -Wall -c $(PATH_SRC)client.c -o $(PATH_BUILD_SRC)client.o
