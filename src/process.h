@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <dirent.h>
-#include <string>
+#include <string.h>
 #include <sys/stat.h>
 #include <cstdlib>
 #include <fstream>
@@ -22,7 +22,7 @@ void printArguments();
 void printReadme();
 void Help();
 
-int launchLab2();
+int launchLab2(char *str);
 int spawnProcess();
 int spawnProcessFone();
 

@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 	printf("\n**********Welcome**********\n");
     
     while (1) {
-        printf("Enter command\n");
+        printf("Enter command:\n");
         scanf("%s", command);
         length = strlen(command);
 

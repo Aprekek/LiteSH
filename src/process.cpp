@@ -8,17 +8,17 @@ int launchLab2(char *str) {
     pid_t pid;
     pid = fork();
 
-    if (str == "move")
+    if (strcmp(str, "move") == 0)
         key = "-m";
-    else if (str == "copy")
+    else if (strcmp(str, "copy") == 0)
         key = "-c";
-    else if (str == "delete")
+    else if (strcmp(str, "delete") == 0)
         key = "-d";
-    else if (str == "size")
+    else if (strcmp(str, "size") == 0)
         key = "-s";
-    else if (str == "display all files")
+    else if (strcmp(str, "displayallfiles") == 0)
         key = "-af";
-    else if (str == "display procfs")
+    else if (strcmp(str, "displayprocfs") == 0)
         key = "ap";
     else {
         cout << "Incorrect argument" << endl;
@@ -26,9 +26,7 @@ int launchLab2(char *str) {
     } 
 
     if (pid == 0) {
-        cout << "Enter argument: ";
-        cin >> str;
-        execl(path, path, str, NULL);
+        execl(path, path, key, NULL);
         _exit (EXIT_FAILURE);
     } else if (pid < 0)
         status = -1;
