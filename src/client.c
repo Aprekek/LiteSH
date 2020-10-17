@@ -23,6 +23,26 @@ int main(int argc, char *argv[]) {
 
 	printf("\n**********Welcome**********\n");
     
+/*
+	
+	while(fgets(buf,MAX_MSG_LENGTH,stdin))
+	{
+		send(sockfd,buf,MAX_MSG_LENGTH,0);
+		
+		while(1)
+		{
+		    read_size = read(sockfd,buf,MAX_MSG_LENGTH);
+		    //Print read_size characters from buf
+		    printf("%.*s\n", read_size, buf);
+		    if (read_size < MAX_MSG_LENGTH)
+		        //Keep on reading until read_size < MAX_MSG_LENGTH, then exit this loop
+		        break;
+		    
+		}
+		
+	bzero(buf, MAX_MSG_LENGTH);
+	}	
+*/
     while (1) {
         printf("Enter command:\n");
         scanf("%s", command);
