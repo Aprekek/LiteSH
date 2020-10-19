@@ -12,6 +12,10 @@
 #include <arpa/inet.h>
 #include <string.h>
 
+#include "/src/help.cpp"
+#include "/src/litesh.cpp"
+#include "/filesystem/src/filesystem.cpp"
+
 #define MAX_MSG_LENGTH 256
 
 pthread_mutex_t clientsMutex = PTHREAD_MUTEX_INITIALIZER;
