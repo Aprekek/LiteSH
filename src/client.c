@@ -6,7 +6,9 @@ int main(int argc, char *argv[]) {
         perror("ERROR, no port provided\n");
         exit(1);
     }
-
+    
+    int read_size = 0;
+    char buf[256];
     char command[64];
     int length;
 	char *ip = "127.0.0.1";
@@ -23,8 +25,6 @@ int main(int argc, char *argv[]) {
 
 	printf("\n**********Welcome**********\n");
     
-/*
-	
 	while(fgets(buf,MAX_MSG_LENGTH,stdin))
 	{
 		send(sockfd,buf,MAX_MSG_LENGTH,0);
@@ -40,21 +40,21 @@ int main(int argc, char *argv[]) {
 		    
 		}
 		
-	bzero(buf, MAX_MSG_LENGTH);
+	    bzero(buf, MAX_MSG_LENGTH);
 	}	
-*/
-    while (1) {
-        printf("Enter command:\n");
-        scanf("%s", command);
-        length = strlen(command);
 
-        if (strcmp(command, "exit") == 0) {
-            close(sockfd);
-            return 0;
-        } else {
-            write(sockfd, command, length);
-        }   
-    }
+    // while (1) {
+    //     printf("Enter command:\n");
+    //     scanf("%s", command);
+    //     length = strlen(command);
+
+    //     if (strcmp(command, "exit") == 0) {
+    //         close(sockfd);
+    //         return 0;
+    //     } else {
+    //         write(sockfd, command, length);
+    //     }   
+    // }
 	
 	return 0;
 }

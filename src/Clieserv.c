@@ -26,7 +26,7 @@ void Bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 void Listen(int sockfd, int backlog)
 {
     int res = listen(sockfd, backlog);
-     if (res == -1)
+    if (res == -1)
     {
         perror("listen failed");
         exit(1);

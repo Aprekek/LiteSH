@@ -7,7 +7,6 @@ int launchLab2(char *str) {
     int status;
     pid_t pid;
     pid = fork();
-
     if (strcmp(str, "move") == 0)
         key = "-m";
     else if (strcmp(str, "copy") == 0)
@@ -28,11 +27,12 @@ int launchLab2(char *str) {
     if (pid == 0) {
         execl(path, path, key, NULL);
         _exit (EXIT_FAILURE);
-    } else if (pid < 0)
+    } else if (pid < 0) {
         status = -1;
-    else if (waitpid (pid, &status, 0) != pid)
+    }
+    else if (waitpid (pid, &status, 0) != pid) {
         status = -1;
-
+    }
     return status;
 }
 
