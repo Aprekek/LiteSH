@@ -32,11 +32,11 @@ int main(int argc, char *argv[])
      while(1)
      {
 		socklen_t clieLen = sizeof(clientAddr);
-        connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
-        clients *cli = (clients *)malloc(sizeof(clients));
-        cli->addres = clientAddr;
-        cli->sockfd = connfd;
-        cli->uid = uid++;
+		connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
+		clients *cli = (clients *)malloc(sizeof(clients));
+		cli->addres = clientAddr;
+		cli->sockfd = connfd;
+		cli->uid = uid++;
 		Pthread_create(&tid, NULL, &handleClient, (void *)cli);
      }	
     
