@@ -19,6 +19,15 @@ pthread_mutex_t clientsMutex = PTHREAD_MUTEX_INITIALIZER;
 static int cliCount = 0;
 static int uid = 10;
 
+typedef struct 
+{
+    struct sockaddr_in addres;
+    int sockfd;
+    int uid;
+    char name [NAME_LEN];
+} clients;
+
+
 int Socket(int domain, int type, int protocol);
 void Bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 void Listen(int sockfd, int backlog);
