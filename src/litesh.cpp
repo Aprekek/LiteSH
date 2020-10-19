@@ -33,6 +33,7 @@ int spawnProcess() {
 
     if (pid == 0) {
         execl(path, path, NULL);
+        _exit (EXIT_FAILURE);
     } else if (pid < 0)
         status = -1;
     else if (waitpid(pid, &status, 0) != pid)
