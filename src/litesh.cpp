@@ -65,21 +65,36 @@ int spawnProcessFone() {
 
 
 
-void signal_handler(int signal_num) 
-{ 
-    cout << "The interrupt signal is (" << signal_num << "). \n"; 
+void signal_handler(int sig) { 
+    printf("\nSignal %i - %s\n", sig, sys_siglist[sig]);
+    if (sig == 1) {
+        exit(EXIT_SUCCESS);
+    } else if (sig == 20) {
+        string str;
+        string str2 = "exit";
+        cout << "Enter 'exit'" << endl;
+        cin >> str;
+        if (str == str2)
+            exit(EXIT_SUCCESS);
+        else
+            cout << "Error" << endl;
+    }
 } 
   
-void catchSignal() 
-{
-    int a, i = 0;
-    signal(SIGABRT, signal_handler);   
-    // register signal SIGABRT and signal handler   
-    cout << "How many signal you want gives?\n";
-    cin >> a; 
-    while(i!=a)
-    { 
-        cout << "Signal Handled" << endl;
-        i++;
-    }
+void catchSignal() {
+    int sig;
+    struct sigaction sa;
+    sigset_t set;
+    sigfillset(&set);
+    sa.sa_handler = signal_handler;
+    sigaction(SIGHUP, &sa, 0);
+    sigaction(SIGTSTP, &sa, 0);
+    sigdelset(&set, SIGHUP);
+    sigdelset(&set, SIGTSTP);
+    sigprocmask(SIG_SETMASK, &set, 0);
+    printf("My pid is %i\n", getpid());
+
+    while(!sigwait(&set, &sig)) 
+        printf("\nSignal %i - %s\n", sig, sys_siglist[sig]);
+
 }
