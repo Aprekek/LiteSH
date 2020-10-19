@@ -70,6 +70,7 @@ void Inet_pton(int af, const char *src, void *dst)
         exit(1);
     }
 }
+/*
 int Write(int handle, void *buf, int count)
 {
     int res = write (handle, buf, count);
@@ -80,7 +81,7 @@ int Write(int handle, void *buf, int count)
         }
     return res;
 }
-
+*/
 void printIpAddr(struct sockaddr_in addr)
 {
     printf("%d.%d.%d.%d", 
@@ -105,7 +106,7 @@ int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_
 void *handleClient(void *arg)
 {  
     //lab3
-    char strH[10], strHelp[10], strH[10], strLab2[10], strProc[10], strProcBg[10], strSignal[10];
+    char *strH, *strHelp, *strH, *strLab2, *strProc, *strProcBg, *strSignal;
     strHelp = "--help";
     strH = "-h";
     strLab2 = "-l2";
@@ -113,9 +114,7 @@ void *handleClient(void *arg)
     strProcBg = "-pb";
     strSignal = "-signal";
    //lab2
-    char strMoving[10], strCopy[10], strDelete[10], strSize[10], strAllFiles[10], strAllProc[10];
-    strHelp = "--help";
-    strH = "-h";
+    char *strMoving, *strCopy, *strDelete, *strSize, *strAllFiles, *strAllProc;
     strMoving = "-m";
     strCopy = "-c";
     strDelete = "-d";
@@ -131,46 +130,51 @@ void *handleClient(void *arg)
     {
         recv(connfd,buf, MAX_MSG_LENGTH,0);
         if (buf == strHelp || buf == strH) // Help
-            Help();
-        else if (buf == strLab2) 
+            Help(); (strcmp(buf, strProc)
+        else if (strcmp(buf, strLab2)
             if (launchLab2() != 0)
-                printf("Error\n");
-         else if (buf == strProc) 
+                puts("Error\n");
+
+         else if(strcmp(buf, strProc)
             if (spawnProcess() != 0)
-                 printf("Error\n");
-         else if (buf == strProcBg) 
+                 puts("Error\n");
+                 
+         else if (strcmp(buf, strProcBg)
             if (spawnProcessFone() != 0)
-                printf("Error\n");
-         else if (buf == strSignal) 
+                puts("Error\n");
+                
+         else if (strcmp(buf, strSignal)
             catchSignal();   
-        else if (buf == strMoving) 
+          
+        else if (strcmp(buf, strMoving)
         { // Перемещение файла;
-            printf ("Enter file name or path to file: \n");
+            puts ("Enter file name or path to file: \n");
             recv(connfd,buf2, MAX_MSG_LENGTH,0);
             cout << "Enter path to dir moving: ";
             recv(connfd,buf3, MAX_MSG_LENGTH,0);
             moveFile(buf2, buf3);
             
-        } else if (buf == strCopy) { // Копирование файла;
+       
+        } else if (strcmp(buf, strCopy)  { // Копирование файла;
             cout << "Enter file name or path to file: ";
             recv(connfd,buf2, MAX_MSG_LENGTH,0);
             cout << "Enter path to dir copy: ";
             recv(connfd,buf3, MAX_MSG_LENGTH,0);
             copyFile(buf2, buf3);
 
-        } else if (buf == strDelete) { // Удаление файла;
+        } else if (strcmp(buf, strDelete)  { // Удаление файла;
             cout << "Enter file name or path to file: ";
-           recv(connfd,buf2, MAX_MSG_LENGTH,0);
+            recv(connfd,buf2, MAX_MSG_LENGTH,0);
             deleteFile(buf2);
 
-        } else if (buf == strSize) { // Подсчет общего размера указанной директории или файла;
+        } else if (strcmp(buf, strSize)  { // Подсчет общего размера указанной директории или файла;
             cout << "File or Dir" << endl;
             cout << "If file - enter 'f'" << endl;
             cout << "If dir - enter 'd'" << endl;
             recv(connfd,buf3, 3,0);
 
             if (buf3 == "f") {
-                cout << "Enter file name or path to file: ";
+                puts("Enter file name or path to file: ");
                  recv(connfd,buf2, MAX_MSG_LENGTH,0);
                 cout << getFileSize(buf2) << " Byte" << endl;
             } else if (buf3 == "d") {
@@ -180,18 +184,19 @@ void *handleClient(void *arg)
             } else {
                 cout << "Incorrect arguments" << endl;
             }
+ 
 
-        } else if (buf == strAllFiles) { // Отображение всех файлов в указанной директории;
+        } else if (strcmp(buf, strAllFiles)  { // Отображение всех файлов в указанной директории;
             cout << "Enter path to the dir: ";
-            cin >> dir;
-            displayAllFiles(dir);
+            recv(connfd,buf2, MAX_MSG_LENGTH,0);
+            displayAllFiles(buf2);
 
-        } else if (buf == strAllProc) { // Отображение всех процессов из файловой системы procfs.
+        } else if  (strcmp(buf, strAllProc)  { // Отображение всех процессов из файловой системы procfs.
             displayProc();
         }
          else 
          {
-            printf("Error\n");
+            puts("Error\n");
             return 0;
          }
       
