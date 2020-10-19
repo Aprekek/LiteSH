@@ -104,15 +104,29 @@ int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_
 
 void *handleClient(void *arg)
 {  
-    char str[10], strHelp[10], strH[10], strLab2[10], strProc[10], strProcBg[10], strSignal[10];
+    //lab3
+    char strH[10], strHelp[10], strH[10], strLab2[10], strProc[10], strProcBg[10], strSignal[10];
     strHelp = "--help";
     strH = "-h";
     strLab2 = "-l2";
     strProc = "-p";
     strProcBg = "-pb";
     strSignal = "-signal";
- 
+   //lab2
+    char strMoving[10], strCopy[10], strDelete[10], strSize[10], strAllFiles[10], strAllProc[10];
+    strHelp = "--help";
+    strH = "-h";
+    strMoving = "-m";
+    strCopy = "-c";
+    strDelete = "-d";
+    strSize = "-s";
+    strAllFiles = "-af";
+    strAllProc = "-ap";
+    
     char buf[MAX_MSG_LENGTH];
+    char buf1[MAX_MSG_LENGTH];
+    char buf2[MAX_MSG_LENGTH];
+    char buf3[3];
     while(1)
     {
         recv(connfd,buf, MAX_MSG_LENGTH,0);
@@ -129,6 +143,52 @@ void *handleClient(void *arg)
                 printf("Error\n");
          else if (buf == strSignal) 
             catchSignal();   
+        else if (buf == strMoving) 
+        { // Перемещение файла;
+            printf ("Enter file name or path to file: \n");
+            recv(connfd,buf2, MAX_MSG_LENGTH,0);
+            cout << "Enter path to dir moving: ";
+            recv(connfd,buf3, MAX_MSG_LENGTH,0);
+            moveFile(buf2, buf3);
+            
+        } else if (buf == strCopy) { // Копирование файла;
+            cout << "Enter file name or path to file: ";
+            recv(connfd,buf2, MAX_MSG_LENGTH,0);
+            cout << "Enter path to dir copy: ";
+            recv(connfd,buf3, MAX_MSG_LENGTH,0);
+            copyFile(buf2, buf3);
+
+        } else if (buf == strDelete) { // Удаление файла;
+            cout << "Enter file name or path to file: ";
+           recv(connfd,buf2, MAX_MSG_LENGTH,0);
+            deleteFile(buf2);
+
+        } else if (buf == strSize) { // Подсчет общего размера указанной директории или файла;
+            cout << "File or Dir" << endl;
+            cout << "If file - enter 'f'" << endl;
+            cout << "If dir - enter 'd'" << endl;
+            recv(connfd,buf3, 3,0);
+
+            if (buf3 == "f") {
+                cout << "Enter file name or path to file: ";
+                 recv(connfd,buf2, MAX_MSG_LENGTH,0);
+                cout << getFileSize(buf2) << " Byte" << endl;
+            } else if (buf3 == "d") {
+                cout << "Enter path to the dir: ";
+                recv(connfd,buf2, MAX_MSG_LENGTH,0);
+                cout << getDirSize(buf2) << " Byte" << endl;
+            } else {
+                cout << "Incorrect arguments" << endl;
+            }
+
+        } else if (buf == strAllFiles) { // Отображение всех файлов в указанной директории;
+            cout << "Enter path to the dir: ";
+            cin >> dir;
+            displayAllFiles(dir);
+
+        } else if (buf == strAllProc) { // Отображение всех процессов из файловой системы procfs.
+            displayProc();
+        }
          else 
          {
             printf("Error\n");
