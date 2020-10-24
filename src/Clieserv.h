@@ -12,9 +12,8 @@
 #include <arpa/inet.h>
 #include <string.h>
 
-#include "/src/help.cpp"
-#include "/src/litesh.cpp"
-#include "/filesystem/src/filesystem.cpp"
+#include "process.h"
+#include "filesystem.h"
 
 #define MAX_MSG_LENGTH 256
 

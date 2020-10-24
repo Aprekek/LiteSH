@@ -1,6 +1,5 @@
 #include "Clieserv.h"
 
-
 int Socket(int domain, int type, int protocol)
 {
     int res = socket(domain, type, protocol);
@@ -106,7 +105,7 @@ int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_
 void *handleClient(void *arg)
 {  
     //lab3
-    char *strH, *strHelp, *strH, *strLab2, *strProc, *strProcBg, *strSignal;
+    char *strH, *strHelp, *strLab2, *strProc, *strProcBg, *strSignal;
     strHelp = "--help";
     strH = "-h";
     strLab2 = "-l2";
@@ -130,44 +129,42 @@ void *handleClient(void *arg)
     {
         recv(connfd,buf, MAX_MSG_LENGTH,0);
         if (buf == strHelp || buf == strH) // Help
-            Help(); (strcmp(buf, strProc)
-        else if (strcmp(buf, strLab2)
+            Help(); 
+        else if (strcmp(buf, strLab2)) {
             if (launchLab2() != 0)
                 puts("Error\n");
-
-         else if(strcmp(buf, strProc)
+        }
+        else if(strcmp(buf, strProc)) {
             if (spawnProcess() != 0)
                  puts("Error\n");
-                 
-         else if (strcmp(buf, strProcBg)
+        }
+        else if (strcmp(buf, strProcBg)) {
             if (spawnProcessFone() != 0)
                 puts("Error\n");
-                
-         else if (strcmp(buf, strSignal)
+        }
+        else if (strcmp(buf, strSignal)) {
             catchSignal();   
-          
-        else if (strcmp(buf, strMoving)
+        }
+        else if (strcmp(buf, strMoving))
         { // Перемещение файла;
             puts ("Enter file name or path to file: \n");
             recv(connfd,buf2, MAX_MSG_LENGTH,0);
             cout << "Enter path to dir moving: ";
             recv(connfd,buf3, MAX_MSG_LENGTH,0);
             moveFile(buf2, buf3);
-            
-       
-        } else if (strcmp(buf, strCopy)  { // Копирование файла;
+
+        } else if (strcmp(buf, strCopy))  { // Копирование файла;
             cout << "Enter file name or path to file: ";
             recv(connfd,buf2, MAX_MSG_LENGTH,0);
             cout << "Enter path to dir copy: ";
             recv(connfd,buf3, MAX_MSG_LENGTH,0);
             copyFile(buf2, buf3);
 
-        } else if (strcmp(buf, strDelete)  { // Удаление файла;
+        } else if (strcmp(buf, strDelete))  { // Удаление файла;
             cout << "Enter file name or path to file: ";
             recv(connfd,buf2, MAX_MSG_LENGTH,0);
             deleteFile(buf2);
-
-        } else if (strcmp(buf, strSize)  { // Подсчет общего размера указанной директории или файла;
+        } else if (strcmp(buf, strSize))  { // Подсчет общего размера указанной директории или файла;
             cout << "File or Dir" << endl;
             cout << "If file - enter 'f'" << endl;
             cout << "If dir - enter 'd'" << endl;
@@ -184,22 +181,20 @@ void *handleClient(void *arg)
             } else {
                 cout << "Incorrect arguments" << endl;
             }
- 
 
-        } else if (strcmp(buf, strAllFiles)  { // Отображение всех файлов в указанной директории;
+        } else if (strcmp(buf, strAllFiles))  { // Отображение всех файлов в указанной директории;
             cout << "Enter path to the dir: ";
             recv(connfd,buf2, MAX_MSG_LENGTH,0);
             displayAllFiles(buf2);
 
-        } else if  (strcmp(buf, strAllProc)  { // Отображение всех процессов из файловой системы procfs.
+        } else if  (strcmp(buf, strAllProc))  { // Отображение всех процессов из файловой системы procfs.
             displayProc();
         }
-         else 
-         {
+        else {
             puts("Error\n");
             return 0;
-         }
-      
+        }
+
         bzero(buf, MAX_MSG_LENGTH);
     }
 

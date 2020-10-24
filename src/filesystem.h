@@ -1,5 +1,5 @@
-#ifndef H_FILE
-#define H_FILE
+#ifndef H_FILESYSTEM
+#define H_FILESYSTEM
 
 #include <iostream>
 #include <stdlib.h>
@@ -13,12 +13,6 @@
 #include <sys/stat.h> // for stat()
 
 using namespace std;
-
-// Help function
-void showMenu();
-void printArguments();
-void printReadme();
-void Help();
 
 // Copy file
 void copyFile(string path, string fileName);

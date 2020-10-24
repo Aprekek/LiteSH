@@ -1,32 +1,17 @@
 #include "process.h"
 
-int launchLab2(char *str) {
+int launchLab2() {
     const char *path = "./filesystem/project";
-    char *key;
+    string str;
     key = (char*)malloc(sizeof(char) * 32);
     int status;
     pid_t pid;
     pid = fork();
 
-    if (strcmp(str, "move") == 0)
-        key = "-m";
-    else if (strcmp(str, "copy") == 0)
-        key = "-c";
-    else if (strcmp(str, "delete") == 0)
-        key = "-d";
-    else if (strcmp(str, "size") == 0)
-        key = "-s";
-    else if (strcmp(str, "displayallfiles") == 0)
-        key = "-af";
-    else if (strcmp(str, "displayprocfs") == 0)
-        key = "ap";
-    else {
-        cout << "Incorrect argument" << endl;
-        return -1;
-    } 
-
     if (pid == 0) {
-        execl(path, path, key, NULL);
+        cout << "Enter key: " << endl;
+        cin >> str;
+        execl(path, path, str, NULL);
         _exit (EXIT_FAILURE);
     } else if (pid < 0)
         status = -1;
