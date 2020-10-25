@@ -128,7 +128,7 @@ void *handleClient(void *arg)
     char buf3[3];
     while(1)
     {
-        recv(connfd,buf, MAX_MSG_LENGTH,0);
+        recv(cli->sockfd,buf, MAX_MSG_LENGTH,0);
         if (buf == strHelp || buf == strH) // Help
             Help(); 
         else if (strcmp(buf, strLab2)) {
@@ -149,35 +149,35 @@ void *handleClient(void *arg)
         else if (strcmp(buf, strMoving))
         { // Перемещение файла;
             puts ("Enter file name or path to file: \n");
-            recv(connfd,buf2, MAX_MSG_LENGTH,0);
+            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
             cout << "Enter path to dir moving: ";
-            recv(connfd,buf3, MAX_MSG_LENGTH,0);
+            recv(cli->sockfd,buf3, MAX_MSG_LENGTH,0);
             moveFile(buf2, buf3);
 
         } else if (strcmp(buf, strCopy))  { // Копирование файла;
             cout << "Enter file name or path to file: ";
-            recv(connfd,buf2, MAX_MSG_LENGTH,0);
+            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
             cout << "Enter path to dir copy: ";
-            recv(connfd,buf3, MAX_MSG_LENGTH,0);
+            recv(cli->sockfd,buf3, MAX_MSG_LENGTH,0);
             copyFile(buf2, buf3);
 
         } else if (strcmp(buf, strDelete))  { // Удаление файла;
             cout << "Enter file name or path to file: ";
-            recv(connfd,buf2, MAX_MSG_LENGTH,0);
+            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
             deleteFile(buf2);
         } else if (strcmp(buf, strSize))  { // Подсчет общего размера указанной директории или файла;
             cout << "File or Dir" << endl;
             cout << "If file - enter 'f'" << endl;
             cout << "If dir - enter 'd'" << endl;
-            recv(connfd,buf3, 3,0);
+            recv(cli->sockfd,buf3, 3,0);
 
             if (buf3 == "f") {
                 puts("Enter file name or path to file: ");
-                 recv(connfd,buf2, MAX_MSG_LENGTH,0);
+                 recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
                 cout << getFileSize(buf2) << " Byte" << endl;
             } else if (buf3 == "d") {
                 cout << "Enter path to the dir: ";
-                recv(connfd,buf2, MAX_MSG_LENGTH,0);
+                recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
                 cout << getDirSize(buf2) << " Byte" << endl;
             } else {
                 cout << "Incorrect arguments" << endl;
@@ -185,7 +185,7 @@ void *handleClient(void *arg)
 
         } else if (strcmp(buf, strAllFiles))  { // Отображение всех файлов в указанной директории;
             cout << "Enter path to the dir: ";
-            recv(connfd,buf2, MAX_MSG_LENGTH,0);
+            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
             displayAllFiles(buf2);
 
         } else if  (strcmp(buf, strAllProc))  { // Отображение всех процессов из файловой системы procfs.
