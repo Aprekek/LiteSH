@@ -123,17 +123,20 @@ void *handleClient(void *arg)
     strAllFiles = "-af";
     strAllProc = "-ap";
     
+    char bufCopy[MAX_MSG_LENGTH];
     char buf[MAX_MSG_LENGTH];
     char buf1[MAX_MSG_LENGTH];
     char buf2[MAX_MSG_LENGTH];
     char buf3[3];
     while(1)
     {
-        recv(cli->sockfd,buf, MAX_MSG_LENGTH,0);
-        printf("%d", buf);
+        recv(cli->sockfd,bufCopy, MAX_MSG_LENGTH,0);
+        for (int i = 0; i < strlen(bufCopy) - 1; i++) 
+            buf[i] = bufCopy[i];
+        
         if (strcmp(buf, strH) == 0) // Help
             //Help();
-            printf("Hello");
+            puts("Hello\n");
         else if (strcmp(buf, strLab2) == 0) {
             if (launchLab2() != 0)
                 puts("Error\n");

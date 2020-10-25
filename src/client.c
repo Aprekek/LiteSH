@@ -26,8 +26,8 @@ int main(int argc, char *argv[]) {
 
 	printf("\n**********Welcome**********\n");
     
-    int read_size;
-    char buf[256];
+    // int read_size;
+    // char buf[256];
 	
 	while(fgets(buf,MAX_MSG_LENGTH,stdin))
 	{
