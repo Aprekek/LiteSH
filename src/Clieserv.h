@@ -11,20 +11,33 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
-//#include <signal.h>
-#define MAX_MSG_LENGTH 1024
-pid_t fork(void);
+
+#include "process.h"
+#include "filesystem.h"
+
+#define MAX_MSG_LENGTH 256
 
 static int cliCount = 0;
 static int uid = 10;
+
+typedef struct 
+{
+    struct sockaddr_in addres;
+    int sockfd;
+} clients;
+
+// Help function
+void showMenu();
+void printArguments();
+void printReadme();
+void Help();
 
 int Socket(int domain, int type, int protocol);
 void Bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 void Listen(int sockfd, int backlog);
 int Accept(int sickfd, struct sockaddr *addr, socklen_t *addrlen);
 void Connect(int socket, const struct sockaddr *addr, socklen_t addrlen);
-//void Inet_pton(int af, const char *src, void *dst);
-//void printIpAddr(struct sockaddr_in addr);
-
+int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq);
+void *handleClient(void *arg);
 
 #endif

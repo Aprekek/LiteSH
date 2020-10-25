@@ -1,5 +1,5 @@
 #include "Clieserv.h"
-
+#include "process.h"
 
 int Socket(int domain, int type, int protocol)
 {
@@ -70,6 +70,7 @@ void Inet_pton(int af, const char *src, void *dst)
         exit(1);
     }
 }
+/*
 int Write(int handle, void *buf, int count)
 {
     int res = write (handle, buf, count);
@@ -80,7 +81,7 @@ int Write(int handle, void *buf, int count)
         }
     return res;
 }
-
+*/
 void printIpAddr(struct sockaddr_in addr)
 {
     printf("%d.%d.%d.%d", 
@@ -88,4 +89,122 @@ void printIpAddr(struct sockaddr_in addr)
             (addr.sin_addr.s_addr & 0xff00) >> 8,
             (addr.sin_addr.s_addr & 0xff0000) >> 16,
             (addr.sin_addr.s_addr & 0xff000000) >> 24);
+}
+
+int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq)
+{
+    int res = pthread_create(thread, attr, start_routine, arq);
+    if (res != 0)
+    {
+        perror("pthread_create failed\n");
+        exit(1);
+    }
+    return res;
+}
+
+
+void *handleClient(void *arg)
+{  
+    clients *cli = (clients *)arg;
+    //lab3
+    char *strH, *strHelp, *strLab2, *strProc, *strProcBg, *strSignal;
+    strHelp = "--help";
+    strH = "-h";
+    strLab2 = "-l2";
+    strProc = "-p";
+    strProcBg = "-pb";
+    strSignal = "-signal";
+   //lab2
+    char *strMoving, *strCopy, *strDelete, *strSize, *strAllFiles, *strAllProc;
+    strMoving = "-m";
+    strCopy = "-c";
+    strDelete = "-d";
+    strSize = "-s";
+    strAllFiles = "-af";
+    strAllProc = "-ap";
+    
+    char buf[MAX_MSG_LENGTH];
+    char buf1[MAX_MSG_LENGTH];
+    char buf2[MAX_MSG_LENGTH];
+    char buf3[3];
+    while(1)
+    {
+        recv(cli->sockfd,buf, MAX_MSG_LENGTH,0);
+        printf("%d", buf);
+        if (strcmp(buf, strH) == 0) // Help
+            //Help();
+            printf("Hello");
+        else if (strcmp(buf, strLab2) == 0) {
+            if (launchLab2() != 0)
+                puts("Error\n");
+        }
+        else if(strcmp(buf, strProc) == 0) {
+            if (spawnProcess() != 0)
+                 puts("Error\n");
+        }
+        else if (strcmp(buf, strProcBg) == 0) {
+            if (spawnProcessFone() != 0)
+                puts("Error\n");
+        }
+        else if (strcmp(buf, strSignal) == 0) {
+            catchSignal();   
+        }
+        else if (strcmp(buf, strMoving) == 0) { // Перемещение файла;
+            puts ("Enter file name or path to file!: \n");
+            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
+            cout << "Enter path to dir moving: ";
+            recv(cli->sockfd,buf3, MAX_MSG_LENGTH,0);
+            moveFile(buf2, buf3);
+
+        } else if (strcmp(buf, strCopy) == 0)  { // Копирование файла;
+            cout << "Enter file name or path to file: ";
+            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
+            cout << "Enter path to dir copy: ";
+            recv(cli->sockfd,buf3, MAX_MSG_LENGTH,0);
+            copyFile(buf2, buf3);
+
+        } else if (strcmp(buf, strDelete) == 0)  { // Удаление файла;
+            cout << "Enter file name or path to file: ";
+            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
+            deleteFile(buf2);
+        } else if (strcmp(buf, strSize) == 0)  { // Подсчет общего размера указанной директории или файла;
+            cout << "File or Dir" << endl;
+            cout << "If file - enter 'f'" << endl;
+            cout << "If dir - enter 'd'" << endl;
+            recv(cli->sockfd,buf3, 3,0);
+
+            if (buf3 == "f") {
+                puts("Enter file name or path to file: ");
+                 recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
+                cout << getFileSize(buf2) << " Byte" << endl;
+            } else if (buf3 == "d") {
+                cout << "Enter path to the dir: ";
+                recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
+                cout << getDirSize(buf2) << " Byte" << endl;
+            } else {
+                cout << "Incorrect arguments" << endl;
+            }
+
+        } else if (strcmp(buf, strAllFiles) == 0)  { // Отображение всех файлов в указанной директории;
+            cout << "Enter path to the dir: ";
+            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
+            displayAllFiles(buf2);
+
+        } else if  (strcmp(buf, strAllProc) == 0)  { // Отображение всех процессов из файловой системы procfs.
+            displayProc();
+        }
+        else {
+            puts("Error\n");
+            return 0;
+        }
+
+        bzero(buf, MAX_MSG_LENGTH);
+    }
+
+    close(cli->sockfd);
+    free(cli);
+    pthread_detach(pthread_self());
+
+    return 0;
+
 }
