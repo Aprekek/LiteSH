@@ -104,6 +104,7 @@ int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_
 
 void *handleClient(void *arg)
 {  
+    clients *cli = (clients *)arg;
     //lab3
     char *strH, *strHelp, *strLab2, *strProc, *strProcBg, *strSignal;
     strHelp = "--help";
