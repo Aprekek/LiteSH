@@ -26,6 +26,11 @@ typedef struct
     int sockfd;
 } clients;
 
+// Help function
+void showMenu();
+void printArguments();
+void printReadme();
+void Help();
 
 int Socket(int domain, int type, int protocol);
 void Bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -33,5 +38,6 @@ void Listen(int sockfd, int backlog);
 int Accept(int sickfd, struct sockaddr *addr, socklen_t *addrlen);
 void Connect(int socket, const struct sockaddr *addr, socklen_t addrlen);
 int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq);
+void *handleClient(void *arg);
 
 #endif

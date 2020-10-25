@@ -16,12 +16,6 @@
 
 using namespace std;
 
-// Help function
-void showMenu();
-void printArguments();
-void printReadme();
-void Help();
-
 int launchLab2();
 int spawnProcess();
 int spawnProcessFone();

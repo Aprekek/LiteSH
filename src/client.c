@@ -24,7 +24,8 @@ int main(int argc, char *argv[]) {
 
 	printf("\n**********Welcome**********\n");
     
-/*
+    int read_size;
+    char buf[256];
 	
 	while(fgets(buf,MAX_MSG_LENGTH,stdin))
 	{
@@ -43,19 +44,6 @@ int main(int argc, char *argv[]) {
 		
 	bzero(buf, MAX_MSG_LENGTH);
 	}	
-*/
-    while (1) {
-        printf("Enter command:\n");
-        scanf("%s", command);
-        length = strlen(command);
-
-        if (strcmp(command, "exit") == 0) {
-            close(sockfd);
-            return 0;
-        } else {
-            write(sockfd, command, length);
-        }   
-    }
 	
 	return 0;
 }

@@ -4,10 +4,10 @@ PATH_BUILD_SRC = build/
 all: build client server
 
 client: $(PATH_BUILD_SRC)Clieserv.o $(PATH_BUILD_SRC)client.o $(PATH_BUILD_SRC)process.o $(PATH_BUILD_SRC)help.o $(PATH_BUILD_SRC)filesystem.o
-	g++ $(PATH_BUILD_SRC)Clieserv.o $(PATH_BUILD_SRC)client.o $(PATH_BUILD_SRC)process.o $(PATH_BUILD_SRC)help.o $(PATH_BUILD_SRC)filesystem.o -o client
+	g++ $(PATH_BUILD_SRC)Clieserv.o $(PATH_BUILD_SRC)client.o $(PATH_BUILD_SRC)process.o $(PATH_BUILD_SRC)help.o $(PATH_BUILD_SRC)filesystem.o -o client -pthread
 	
 server: $(PATH_BUILD_SRC)Clieserv.o $(PATH_BUILD_SRC)server.o $(PATH_BUILD_SRC)process.o $(PATH_BUILD_SRC)filesystem.o
-	g++ $(PATH_BUILD_SRC)Clieserv.o $(PATH_BUILD_SRC)server.o $(PATH_BUILD_SRC)process.o $(PATH_BUILD_SRC)filesystem.o -o server
+	g++ $(PATH_BUILD_SRC)Clieserv.o $(PATH_BUILD_SRC)server.o $(PATH_BUILD_SRC)process.o $(PATH_BUILD_SRC)filesystem.o -o server -pthread
 
 $(PATH_BUILD_SRC)server.o: $(PATH_SRC)server.c
 	g++ -Wall -c $(PATH_SRC)server.c -o $(PATH_BUILD_SRC)server.o

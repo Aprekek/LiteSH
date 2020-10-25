@@ -1,4 +1,5 @@
 #include "Clieserv.h"
+#include "process.h"
 
 int Socket(int domain, int type, int protocol)
 {
@@ -129,43 +130,44 @@ void *handleClient(void *arg)
     while(1)
     {
         recv(cli->sockfd,buf, MAX_MSG_LENGTH,0);
-        if (buf == strHelp || buf == strH) // Help
-            Help(); 
-        else if (strcmp(buf, strLab2)) {
+        printf("%d", buf);
+        if (strcmp(buf, strH) == 0) // Help
+            //Help();
+            printf("Hello");
+        else if (strcmp(buf, strLab2) == 0) {
             if (launchLab2() != 0)
                 puts("Error\n");
         }
-        else if(strcmp(buf, strProc)) {
+        else if(strcmp(buf, strProc) == 0) {
             if (spawnProcess() != 0)
                  puts("Error\n");
         }
-        else if (strcmp(buf, strProcBg)) {
+        else if (strcmp(buf, strProcBg) == 0) {
             if (spawnProcessFone() != 0)
                 puts("Error\n");
         }
-        else if (strcmp(buf, strSignal)) {
+        else if (strcmp(buf, strSignal) == 0) {
             catchSignal();   
         }
-        else if (strcmp(buf, strMoving))
-        { // Перемещение файла;
-            puts ("Enter file name or path to file: \n");
+        else if (strcmp(buf, strMoving) == 0) { // Перемещение файла;
+            puts ("Enter file name or path to file!: \n");
             recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
             cout << "Enter path to dir moving: ";
             recv(cli->sockfd,buf3, MAX_MSG_LENGTH,0);
             moveFile(buf2, buf3);
 
-        } else if (strcmp(buf, strCopy))  { // Копирование файла;
+        } else if (strcmp(buf, strCopy) == 0)  { // Копирование файла;
             cout << "Enter file name or path to file: ";
             recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
             cout << "Enter path to dir copy: ";
             recv(cli->sockfd,buf3, MAX_MSG_LENGTH,0);
             copyFile(buf2, buf3);
 
-        } else if (strcmp(buf, strDelete))  { // Удаление файла;
+        } else if (strcmp(buf, strDelete) == 0)  { // Удаление файла;
             cout << "Enter file name or path to file: ";
             recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
             deleteFile(buf2);
-        } else if (strcmp(buf, strSize))  { // Подсчет общего размера указанной директории или файла;
+        } else if (strcmp(buf, strSize) == 0)  { // Подсчет общего размера указанной директории или файла;
             cout << "File or Dir" << endl;
             cout << "If file - enter 'f'" << endl;
             cout << "If dir - enter 'd'" << endl;
@@ -183,12 +185,12 @@ void *handleClient(void *arg)
                 cout << "Incorrect arguments" << endl;
             }
 
-        } else if (strcmp(buf, strAllFiles))  { // Отображение всех файлов в указанной директории;
+        } else if (strcmp(buf, strAllFiles) == 0)  { // Отображение всех файлов в указанной директории;
             cout << "Enter path to the dir: ";
             recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
             displayAllFiles(buf2);
 
-        } else if  (strcmp(buf, strAllProc))  { // Отображение всех процессов из файловой системы procfs.
+        } else if  (strcmp(buf, strAllProc) == 0)  { // Отображение всех процессов из файловой системы procfs.
             displayProc();
         }
         else {
