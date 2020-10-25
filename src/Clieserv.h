@@ -26,7 +26,6 @@ typedef struct
 {
     struct sockaddr_in addres;
     int sockfd;
-    int uid;
 } clients;
 
 
