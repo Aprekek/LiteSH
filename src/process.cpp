@@ -3,7 +3,7 @@
 int launchLab2() {
     const char *path = "./filesystem/project";
     string str;
-    key = (char*)malloc(sizeof(char) * 32);
+    str = (char*)malloc(sizeof(char) * 32);
     int status;
     pid_t pid;
     pid = fork();
