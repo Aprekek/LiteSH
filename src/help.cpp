@@ -38,7 +38,7 @@ void printReadme()
     "*calculating the total size of a directory or file; "<<endl<<
     "*displaying all file system processes;" <<endl<<
     "*displaying all files in a directory."<<endl<<
-    "Check the appropriate arguments before starting!"<<endl; 
+    "Check the appropriate arguments before starting!"<<endl<< 
     "*calling a line for entering project call commands;"<<endl<<  
     "*a product of the process by its name;" <<endl<<  
     "*return to the command line;"<<endl<<
