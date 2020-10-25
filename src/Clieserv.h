@@ -17,8 +17,6 @@
 
 #define MAX_MSG_LENGTH 256
 
-pthread_mutex_t clientsMutex = PTHREAD_MUTEX_INITIALIZER;
-
 static int cliCount = 0;
 static int uid = 10;
 
