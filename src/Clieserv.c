@@ -1,4 +1,5 @@
 #include "Clieserv.h"
+#include "./lib/lib.h"
 #include "process.h"
 
 int Socket(int domain, int type, int protocol)
@@ -175,7 +176,7 @@ void *handleClient(void *arg)
 
             if (buf3 == "f") {
                 puts("Enter file name or path to file: ");
-                 recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
+                recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
                 cout << getFileSize(buf2) << " Byte" << endl;
             } else if (buf3 == "d") {
                 cout << "Enter path to the dir: ";

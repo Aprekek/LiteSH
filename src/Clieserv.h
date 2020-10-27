@@ -13,7 +13,6 @@
 #include <string.h>
 
 #include "process.h"
-#include "filesystem.h"
 
 #define MAX_MSG_LENGTH 256
 

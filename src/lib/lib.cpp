@@ -1,4 +1,43 @@
-#include "filesystem.h"
+#include "lib.h"
+
+// Size dir or file
+int getFileSize(const char * fileName) //вывод размера файла в текущей директории
+{
+    struct stat file_stat;
+    stat(fileName, &file_stat);
+    return file_stat.st_size;
+}
+
+int getDirSize(const char *dirName)
+{
+    DIR *dir;
+    struct dirent *pdir;
+    struct stat st;
+    long Size = 0;
+    char *tmpstr; //буфер пути
+    dir = opendir(dirName);
+	if(dir == NULL)
+	{
+	    perror("Something happened trying to open directory");
+	    exit(1);
+	}
+	while((pdir = readdir(dir)) != NULL) 
+	{
+		if(pdir->d_name[0] == '.') continue;
+		asprintf(&tmpstr, "%s/%s", dirName, pdir->d_name);//выводит и сразу же записывает в памяти директорию, в которую заходит, с указанием её пути
+		if(lstat(tmpstr, &st) != 0)//ошибка про чтении файла
+		{
+		    perror("Something happened with file.");
+		    exit(1);
+		};
+		if(S_ISDIR(st.st_mode)) getDirSize(tmpstr); //проверка на доступность файла
+		else{
+		    //fprintf(stdout, "   %ld: - Filename : %s\n",st.st_size, pdir->d_name); //доп. проверка файлов
+		    Size += st.st_size;
+		}
+    }
+    return Size;
+}
 
 #define _GNU_SOURCE
 #define PROC_DIRECTORY "/proc/"
@@ -116,43 +155,3 @@ void displayAllFiles(const char *dirName)
     }
 }
 // Display all files
-
-
-// Size dir or file
-int getFileSize(const char * fileName) //вывод размера файла в текущей директории
-{
-    struct stat file_stat;
-    stat(fileName, &file_stat);
-    return file_stat.st_size;
-}
-
-int getDirSize(const char *dirName)
-{
-    DIR *dir;
-    dirent *pdir;
-    struct stat st;
-    long Size = 0;
-    char *tmpstr; //буфер пути
-    dir = opendir(dirName);
-	if(dir == NULL)
-	{
-	    perror("Something happened trying to open directory");
-	    exit(1);
-	}
-	while((pdir = readdir(dir)) != NULL) 
-	{
-		if(pdir->d_name[0] == '.') continue;
-		asprintf(&tmpstr, "%s/%s", dirName, pdir->d_name);//выводит и сразу же записывает в памяти директорию, в которую заходит, с указанием её пути
-		if(lstat(tmpstr, &st) != 0)//ошибка про чтении файла
-		{
-		    perror("Something happened with file.");
-		    exit(1);
-		};
-		if(S_ISDIR(st.st_mode)) getDirSize(tmpstr); //проверка на доступность файла
-		else{
-		    //fprintf(stdout, "   %ld: - Filename : %s\n",st.st_size, pdir->d_name); //доп. проверка файлов
-		    Size += st.st_size;
-		}
-    }
-    return Size;
-}

@@ -1,5 +1,5 @@
-#ifndef H_FILESYSTEM
-#define H_FILESYSTEM
+#ifndef LIB_H
+#define LIB_H
 
 #include <iostream>
 #include <stdlib.h>
@@ -30,8 +30,7 @@ int displayProc();
 // Display all files
 void displayAllFiles(const char *dirName);
 
-// Size file or dir
-int getFileSize(const char *fileName);
+int getFileSize(const char * fileName);
 int getDirSize(const char *dirName);
 
 #endif

@@ -1,5 +1,6 @@
 #include "Clieserv.h"
-#include "filesystem.h"
+#include <dlfcn.h>
+#include "./lib/lib.h"
 #include "process.h"
 
 int main(int argc, char *argv[]) {
@@ -14,6 +15,23 @@ int main(int argc, char *argv[]) {
 	int port = atoi(argv[1]);
     struct sockaddr_in server = {0};
 
+	// char *error;
+	// void *lib = dlopen("./libfs.so", RTLD_LAZY);
+	// if (!lib) {
+	// 	fputs (dlerror(), stderr);
+	// 	exit(-1);
+	// }
+	// int (*func)(const char *path) = (int(*)(const char *))dlsym(lib, "getFileSize");
+
+	// if ((error = dlerror()) != NULL) {
+	// 	fprintf (stderr, "%s\n", error);
+	// 	exit(-1);
+	// }
+	// printf("%d\n", (*func)("./client"));
+	// dlclose(lib);
+
+	printf("%d", getFileSize("./server"));
+
     int sockfd = Socket(AF_INET, SOCK_STREAM, 0); //протокол
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = inet_addr(ip);
@@ -22,10 +40,10 @@ int main(int argc, char *argv[]) {
     // Connect to Server
     Connect(sockfd, (struct sockaddr *)&server, sizeof server); 
 
+
 	printf("\n**********Welcome**********\n");
-    
-    int read_size;
     char buf[256];
+	int read_size = 0;
 	
 	while(fgets(buf,MAX_MSG_LENGTH,stdin))
 	{
