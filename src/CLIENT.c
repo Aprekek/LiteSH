@@ -64,12 +64,18 @@ int main(int argc, char *argv[])
 
 	while(i < a)
 	{
-        fgets(buf,MAX_MSG_LENGTH,stdin);
+		fgets(buf,MAX_MSG_LENGTH,stdin);
 		send(sockfd,buf,MAX_MSG_LENGTH,0);
         i++;
-		bzero(buf, MAX_MSG_LENGTH);
+	    bzero(buf, MAX_MSG_LENGTH);
 	}
-		
+	  
+    while(1)
+    {
+        send(sockfd,buf,MAX_MSG_LENGTH,0);
+		cout << buf << endl;
+		bzero(buf, MAX_MSG_LENGTH);		
+    }	
 	
 	return 0;
 }
