@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 	{
 		fgets(buf,MAX_MSG_LENGTH,stdin);
 		send(sockfd,buf,MAX_MSG_LENGTH,0);
-        i++;
+		i++;
 	    bzero(buf, MAX_MSG_LENGTH);
 	}
 	  
