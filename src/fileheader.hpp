@@ -1,5 +1,5 @@
-#ifndef H_FILE
-#define H_FILE
+#ifndef H_FILESYSTEM
+#define H_FILESYSTEM
 
 #include <iostream>
 #include <stdlib.h>
@@ -9,25 +9,33 @@
 #include <sys/stat.h>
 #include <cstdlib>
 #include <fstream>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <sys/types.h> // for opendir(), readdir(), closedir()
+#include <sys/stat.h> // for stat()
+#include <ftw.h>
+#include <fcntl.h> /* Определение констант O_* */
 #include <unistd.h>
-#include <sys/wait.h>
-#include <csignal>
 
 using namespace std;
 
-// Help function
-void showMenu();
-void printArguments();
-void printReadme();
-void Help();
+// Copy file
+void copyFile(string path, string fileName);
 
-int launchLab2();
-int spawnProcess();
-int spawnProcessFone();
+// Move file
+void moveFile(string path, string fileName);
 
-void catchSignal();
-void signal_handler(int signal_num);
+// Delete file
+void deleteFile(string fileName);
 
+// All process
+int IsNumeric(const char* ccharptr_CharacterList);
+int displayProc(char *pathFile);
+
+// Display all files
+static int dirTree(const char *pathname, const struct stat *sbuf, int type, struct FTW *ftwb); 
+void displayAllFiles(const char *dirName, char *pathFile);
+
+
+// Size file or dir
+void printGetDirSize(const char *dirName, char *pathFile);
+void getFileSize(const char * fileName, char *pathFile);
 #endif
