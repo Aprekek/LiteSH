@@ -105,6 +105,23 @@ int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_
 }
 
 
+void SendClient(void *arg, char *file)
+{
+    FILE *fp;
+    clients *cli = (clients *)arg;
+    int counter = 512;
+    fp = fopen(file, "w");
+    char *buffer = calloc(sizeof(char) * (counter+1)); 
+
+    while(!feof(fp))
+    {
+        fgets(buffer);
+        send(cli->sockfd, buffer , strlen(buffer) , 0 );
+    }
+
+}
+
+
 void *handleClient(void *arg, void *arg1)
 {  
     char *path = "output.txt";
@@ -146,21 +163,21 @@ void *handleClient(void *arg, void *arg1)
             copyFile(comar->buf1, comar->buf2);
               
         } 
-        else if (strcmp(comar->buff, "-d") == 0)  
+        else if (strcmp(comar->buf, "-d") == 0)  
         { // Удаление файла;
             deleteFile(comar->buf1);
              
         } 
-        else if (strcmp(comar->bufff, "-s") == 0)  
+        else if (strcmp(comar->buf, "-s") == 0)  
         { // Подсчет общего размера указанной директории или файла;
             if (comar->buf3 == "f") 
             {
                 printGetFileSize(comar->buf2, path);
                  
             } 
-            else if (com->buf3 == "d") 
+            else if (comar->buf3 == "d") 
             {
-                printGetDirSize(com->buf2, path);
+                printGetDirSize(comar->buf2, path);
                  
             } else 
             {
@@ -170,7 +187,7 @@ void *handleClient(void *arg, void *arg1)
         } 
         else if (strcmp(comar->buf, "-af") == 0)  
         { // Отображение всех файлов в указанной директории;
-            displayAllFiles(buf2, path);
+            displayAllFiles(comar->buf2, path);
              
         } 
         else if  (strcmp(comar->buf, "-ap") == 0)  
@@ -185,7 +202,7 @@ void *handleClient(void *arg, void *arg1)
         
 
     }
-
+    SendClient(cli, path);
     close(cli->sockfd);
     free(cli);
     free(comar);
@@ -194,3 +211,4 @@ void *handleClient(void *arg, void *arg1)
     return 0;
 
 }
+
