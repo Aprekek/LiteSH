@@ -15,9 +15,9 @@ void showMenu()
    
 void printArguments()
 {
-  cout << "--help"<<endl;
-	cout << "-h"<<endl;
-  cout << "-m - Move files"<<endl;
+   cout << "--help"<<endl;
+   cout << "-h"<<endl;
+   cout << "-m - Move files"<<endl;
 	cout << "-c - Copying file"<<endl;
 	cout << "-d - File deletion"<<endl;
 	cout << "-s - Calculating the total size of the specified directory or file"<<endl;
@@ -38,7 +38,7 @@ void printReadme()
     "*calculating the total size of a directory or file; "<<endl<<
     "*displaying all file system processes;" <<endl<<
     "*displaying all files in a directory."<<endl<<
-    "Check the appropriate arguments before starting!"<<endl; 
+    "Check the appropriate arguments before starting!"<<endl<< 
     "*calling a line for entering project call commands;"<<endl<<  
     "*a product of the process by its name;" <<endl<<  
     "*return to the command line;"<<endl<<
@@ -57,7 +57,7 @@ void Help()
         {
             case 'A' : cout << " Пинов Даниил Игоревич \n Есикова Анастасия Дмитриевна \n Лепёхин Даниил Александрович"<< endl; 
                             break;
-            case 'ar' : printArguments();
+            case 'a' : printArguments();
                             break;
             case 'r' : printReadme();
                             break;
