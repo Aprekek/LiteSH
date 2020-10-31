@@ -1,6 +1,5 @@
 #include "Clieserv.h"
-#include "process.h"
-bool flag = 0;
+
 
 
 int Socket(int domain, int type, int protocol)
@@ -111,35 +110,81 @@ void SendClient(void *arg, char *file)
     clients *cli = (clients *)arg;
     int counter = 512;
     fp = fopen(file, "w");
-    char *buffer = calloc(sizeof(char) * (counter+1)); 
+    char *buffer = (char *)calloc((counter+1), sizeof(char)); 
 
     while(!feof(fp))
     {
-        fgets(buffer);
-        write(cli->sockfd, buffer , strlen(buffer));
+        fgets(buffer, counter, fp);
+        write(cli->sockfd, buffer, strlen(buffer));
     }
 
 }
 
 
-void *handleClient(void *arg, void *arg1)
+void *handleClient(void *arg)
 {  
+    char count[2];
+    int argc;
     char *path = "output.txt";
     clients *cli = (clients *)arg;
-    comArg *comar = (comArg *)arg1;
+    struct comArg comArg;
+    recv(cli->sockfd,count,2,0);
+    argc = (int) count[0];
+        
+        switch(argc)
+        {
+            case '1':
+            {
+                recv(cli->sockfd, comArg.buf, MAX_MSG_LENGTH,0);
+                break;
+            }
+                
+            case '2':
+            {
+                recv(cli->sockfd,comArg.buf, 3, 0);
+                recv(cli->sockfd,comArg.buf1, MAX_MSG_LENGTH,0);
+               
+                break;
+            }
+            
+            case '3':
+            {
+                recv(cli->sockfd,comArg.buf, 3, 0);
+                recv(cli->sockfd,comArg.buf1, MAX_MSG_LENGTH,0);
+                recv(cli->sockfd,comArg.buf2, MAX_MSG_LENGTH,0);
+               
+                break;
+            }
+
+            case '4':
+            {
+                recv(cli->sockfd,comArg.buf, 3, 0);
+                recv(cli->sockfd,comArg.buf1, MAX_MSG_LENGTH,0);
+                recv(cli->sockfd,comArg.buf3, 3,0);
+                recv(cli->sockfd,comArg.buf2, MAX_MSG_LENGTH,0);
+                
+                break;
+            }
+            default:
+            {
+                exit (EXIT_FAILURE);
+                
+            }
+                
+        }
 
     //lab3
     // "--help" "-h"; "-l2"; "-p"; strProcBg = "-pb"; "-signal"; "-m"; "-c"; "-d"; "-s"; "-af"; "-ap";
     while(flag == 0)
     {
-        if (strcmp(comar->buf, "-h") == 0)
+        if (strcmp(comArg.buf, "-h") == 0)
         {
             int fp = open(path, O_WRONLY | O_APPEND);
 	        dup2(fp, 1);
             Help();
         } 
 
-        else if(strcmp(comar->buf, "-p") == 0) 
+        else if(strcmp(comArg.buf, "-p") == 0) 
         {
             int status = 0;
             pid_t pid;
@@ -147,20 +192,20 @@ void *handleClient(void *arg, void *arg1)
 
             if (pid == 0) 
             {
-                dup2(cli->sockfd, 1)
-                execl(comar->buf1, comar->buf1, NULL);
+                dup2(cli->sockfd, 1);
+                execl(comArg.buf1, comArg.buf1, NULL);
             } else if (pid < 0)
                 status = -1;
             else if (waitpid(pid, &status, 0) != pid)
                 status = -1;
-            FILE *fp;
-            fp = open(path,  O_WRONLY | O_APPEND);
+            FILE * fp;
+            fp = fopen(path, "w");
             fprintf(fp, "%d", status);
             fclose(fp);
 
         }
         
-        else if (strcmp(comar->buf, "-pb") == 0) 
+        else if (strcmp(comArg.buf, "-pb") == 0) 
         {
             int status = 0;
             pid_t pid;
@@ -168,50 +213,49 @@ void *handleClient(void *arg, void *arg1)
 
             if (pid == 0) 
             {
-                dup2(cli->sockfd, 1)
-                execl(comar->buf1, omar->buf1, NULL);
-                _exit (EXIT_FAILURE);
+                dup2(cli->sockfd, 1);
+                execl(comArg.buf1, comArg.buf1, NULL);
+                exit (EXIT_FAILURE);
             } else if (pid < 0)
                 status = -1;
             else if (waitpid(pid, &status, WNOHANG) != 0)
                 status = -1;
-            FILE *fp;
-            fp = open(path,  O_WRONLY | O_APPEND);
+            FILE * fp;
+            fp = fopen(path,  "w");
             fprintf(fp, "%d", status);
             fclose(fp);
-
         }
-        else if (strcmp(comar->buf, "-sig") == 0) 
+        else if (strcmp(comArg.buf, "-sig") == 0) 
         {
             //FIXME
             catchSignal();
              
         }
-        else if (strcmp(comar->buf, "-m") == 0) 
+        else if (strcmp(comArg.buf, "-m") == 0) 
         { // Перемещение файла;
-            moveFile(comar->buf1, comar->buf2);
+            moveFile(comArg.buf1, comArg.buf2);
               
         } 
-        else if (strcmp(comar->buf, "-c") == 0)  
+        else if (strcmp(comArg.buf, "-c") == 0)  
         { // Копирование файла;
-            copyFile(comar->buf1, comar->buf2);
+            copyFile(comArg.buf1, comArg.buf2);
               
         } 
-        else if (strcmp(comar->buf, "-d") == 0)  
+        else if (strcmp(comArg.buf, "-d") == 0)  
         { // Удаление файла;
-            deleteFile(comar->buf1);
+            deleteFile(comArg.buf1);
              
         } 
-        else if (strcmp(comar->buf, "-s") == 0)  
+        else if (strcmp(comArg.buf, "-s") == 0)  
         { // Подсчет общего размера указанной директории или файла;
-            if (comar->buf3 == "f") 
+            if (strcmp(comArg.buf3,"f")) 
             {
-                printGetFileSize(comar->buf2, path);
+                getFileSize(comArg.buf2, path);
                  
             } 
-            else if (comar->buf3 == "d") 
+            else if (strcmp(comArg.buf3, "d")) 
             {
-                printGetDirSize(comar->buf2, path);
+                printGetDirSize(comArg.buf2, path);
                  
             } else 
             {
@@ -219,12 +263,12 @@ void *handleClient(void *arg, void *arg1)
             }
 
         } 
-        else if (strcmp(comar->buf, "-af") == 0)  
+        else if (strcmp(comArg.buf, "-af") == 0)  
         { // Отображение всех файлов в указанной директории;
-            displayAllFiles(comar->buf2, path);
+            displayAllFiles(comArg.buf2, path);
              
         } 
-        else if  (strcmp(comar->buf, "-ap") == 0)  
+        else if  (strcmp(comArg.buf, "-ap") == 0)  
         { // Отображение всех процессов из файловой системы procfs.
             displayProc(path);
            
@@ -239,10 +283,8 @@ void *handleClient(void *arg, void *arg1)
     SendClient(cli, path);
     close(cli->sockfd);
     free(cli);
-    free(comar);
     pthread_detach(pthread_self());
 
     return 0;
 
 }
-
