@@ -70,12 +70,26 @@ int main(int argc, char *argv[])
 	    bzero(buf, MAX_MSG_LENGTH);
 	}
 	  
+    int nread = 0;
+    char bufffer[256];
+
     while(1)
-    {
-        send(sockfd,buf,MAX_MSG_LENGTH,0);
-		cout << buf << endl;
-		bzero(buf, MAX_MSG_LENGTH);		
-    }	
+	{
+        nread = read(sockfd, buffer, 256);
+        if (nread!= -1)
+            write(STDOUT_FILENO, buffer, nread);
+		bzero(buf, 256);
+	}
+
+    /*
+    int shutdown(int s, int how);
+
+    Первый аргумент функции - сокет-дескриптор, который должен быть закрыт. Второй аргумент - целое значение, указывающее, каким образом закрывается сокет, а именно:
+
+    0 - сокет закрывается для чтения;
+    1 - сокет закрывается для записи;
+    2 - сокет закрывается для чтения и для записи.
+    */
 	
 	return 0;
 }
