@@ -1,4 +1,5 @@
 #include "filesystem.h"
+#include <string.h>
 
 #define PROC_DIRECTORY "/proc/"
 
@@ -25,6 +26,7 @@ void copyFile(string path, string fileName)
         newFile << file.rdbuf();
     else
     {
+        exit (EXIT_FAILURE);
         cout << "File or dir opening error" << endl;
     }
     file.close();
@@ -47,6 +49,7 @@ void deleteFile(string fileName)
 
     if (remove(str) != 0)
     {
+        exit (EXIT_FAILURE);
         cout<< "Error delete file" << endl;
     }
         
@@ -147,8 +150,8 @@ int getDirSize(const char *dirName)
     dir = opendir(dirName);
 	if(dir == NULL)
 	{
+        exit (EXIT_FAILURE);
 	    perror("Something happened trying to open directory");
-	    exit(1);
 	}
 	while((pdir = readdir(dir)) != NULL) 
 	{
