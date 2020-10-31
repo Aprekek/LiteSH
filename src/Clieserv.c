@@ -116,7 +116,7 @@ void SendClient(void *arg, char *file)
     while(!feof(fp))
     {
         fgets(buffer);
-        send(cli->sockfd, buffer , strlen(buffer) , 0 );
+        write(cli->sockfd, buffer , strlen(buffer));
     }
 
 }
@@ -134,22 +134,56 @@ void *handleClient(void *arg, void *arg1)
     {
         if (strcmp(comar->buf, "-h") == 0)
         {
-            int fp = open("txt.txt", O_WRONLY | O_APPEND);
+            int fp = open(path, O_WRONLY | O_APPEND);
 	        dup2(fp, 1);
             Help();
         } 
 
         else if(strcmp(comar->buf, "-p") == 0) 
         {
-            spawnProcess();
+            int status = 0;
+            pid_t pid;
+            pid = fork();
+
+            if (pid == 0) 
+            {
+                dup2(cli->sockfd, 1)
+                execl(comar->buf1, comar->buf1, NULL);
+            } else if (pid < 0)
+                status = -1;
+            else if (waitpid(pid, &status, 0) != pid)
+                status = -1;
+            FILE *fp;
+            fp = open(path,  O_WRONLY | O_APPEND);
+            fprintf(fp, "%d", status);
+            fclose(fp);
+
         }
         
         else if (strcmp(comar->buf, "-pb") == 0) 
         {
-            spawnProcessFone();
+            int status = 0;
+            pid_t pid;
+            pid = fork();
+
+            if (pid == 0) 
+            {
+                dup2(cli->sockfd, 1)
+                execl(comar->buf1, omar->buf1, NULL);
+                _exit (EXIT_FAILURE);
+            } else if (pid < 0)
+                status = -1;
+            else if (waitpid(pid, &status, WNOHANG) != 0)
+                status = -1;
+            FILE *fp;
+            fp = open(path,  O_WRONLY | O_APPEND);
+            fprintf(fp, "%d", status);
+            fclose(fp);
+
         }
         else if (strcmp(comar->buf, "-sig") == 0) 
         {
+            //FIXME
             catchSignal();
              
         }
