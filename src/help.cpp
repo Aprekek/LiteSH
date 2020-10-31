@@ -44,7 +44,7 @@ void Help()
         {
             case 'A' : cout << " Пинов Даниил Игоревич \n Есикова Анастасия Дмитриевна \n Лепёхин Даниил Александрович"<< endl; 
                             break;
-            case 'ar' : printArguments();
+            case 'a' : printArguments();
                             break;
             case 'r' : printReadme();
                             break;
