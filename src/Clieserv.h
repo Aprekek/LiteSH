@@ -23,11 +23,11 @@ static int cliCount = 0;
 static int uid = 10;
 
 
-typedef struct 
+struct clients
 {
     struct sockaddr_in addres;
     int sockfd;
-} clients;
+} ;
 
 struct comArg
 {
@@ -50,7 +50,7 @@ void Listen(int sockfd, int backlog);
 int Accept(int sickfd, struct sockaddr *addr, socklen_t *addrlen);
 void Connect(int socket, const struct sockaddr *addr, socklen_t addrlen);
 //int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq);
-//void handleClient(void *arg), struct comArg comArg);
-void SendClient(void *arg, char *file);
+void handleClient(struct clients cli, struct comArg comArg);
+void SendClient(struct clients cli, char *file);
 
 #endif

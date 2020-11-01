@@ -104,10 +104,9 @@ void printIpAddr(struct sockaddr_in addr)
 }*/
 
 
-void SendClient(void *arg, char *file)
+void SendClient(struct clients cli, char *file)
 {
     FILE *fp;
-    clients *cli = (clients *)arg;
     int counter = 512;
     fp = fopen(file, "w");
     char *buffer = (char *)calloc((counter+1), sizeof(char)); 
@@ -115,30 +114,39 @@ void SendClient(void *arg, char *file)
     while(!feof(fp))
     {
         fgets(buffer, counter, fp);
-        write(cli->sockfd, buffer, strlen(buffer));
+        write(cli.sockfd, buffer, strlen(buffer));
     }
 
 }
 
-/*
-void *handleClient(void *arg, struct comArg comArg)
+
+
+void handleClient(struct clients cli, struct comArg comArg)
 {  
- 	clients *cli = (clients *)arg;
 	bool flag = 0;
     char *path = "output.txt";                
-        
+    char buf[10];
+
+    printf("3\n");
+    for(int i = 0; i < strlen(comArg.buf)-1; i++)
+            buf[i] = comArg.buf[i];
     //lab3
     // "--help" "-h"; "-l2"; "-p"; strProcBg = "-pb"; "-signal"; "-m"; "-c"; "-d"; "-s"; "-af"; "-ap";
     while(flag == 0)
     {
-        if (strcmp(comArg.buf, "-h") == 0)
+        printf("4\n");
+        printf("%d\n", strlen(buf));  
+        if (strcmp(buf, "-h") == 0)
         {
-            int fp = open(path, O_WRONLY | O_APPEND);
-	        dup2(fp, 1);
-           printf("Help \n");
+            printf("4\n");
+            FILE *fp;
+            fp = fopen(path, "w");
+            fprintf(fp, "Help\n", 7);
+            fclose(fp);
+            printf("5\n", buf);
         } 
 
-        else if(strcmp(comArg.buf, "-p") == 0) 
+        else if(strcmp(buf, "-p") == 0) 
         {
             int status = 0;
             pid_t pid;
@@ -146,7 +154,7 @@ void *handleClient(void *arg, struct comArg comArg)
 
             if (pid == 0) 
             {
-                dup2(cli->sockfd, 1);
+                dup2(cli.sockfd, 1);
                 execl(comArg.buf1, comArg.buf1, NULL);
             } else if (pid < 0)
                 status = -1;
@@ -159,7 +167,7 @@ void *handleClient(void *arg, struct comArg comArg)
 
         }
         
-        else if (strcmp(comArg.buf, "-pb") == 0) 
+        else if (strcmp(buf, "-pb") == 0) 
         {
             int status = 0;
             pid_t pid;
@@ -167,7 +175,7 @@ void *handleClient(void *arg, struct comArg comArg)
 
             if (pid == 0) 
             {
-                dup2(cli->sockfd, 1);
+                dup2(cli.sockfd, 1);
                 execl(comArg.buf1, comArg.buf1, NULL);
                 exit (EXIT_FAILURE);
             } else if (pid < 0)
@@ -179,28 +187,28 @@ void *handleClient(void *arg, struct comArg comArg)
             fprintf(fp, "%d", status);
             fclose(fp);
         }
-        else if (strcmp(comArg.buf, "-sig") == 0) 
+        else if (strcmp(buf, "-sig") == 0) 
         {
             //FIXME
             catchSignal();
              
         }
-        else if (strcmp(comArg.buf, "-m") == 0) 
+        else if (strcmp(buf, "-m") == 0) 
         { // Перемещение файла;
             moveFile(comArg.buf1, comArg.buf2);
               
         } 
-        else if (strcmp(comArg.buf, "-c") == 0)  
+        else if (strcmp(buf, "-c") == 0)  
         { // Копирование файла;
             copyFile(comArg.buf1, comArg.buf2);
               
         } 
-        else if (strcmp(comArg.buf, "-d") == 0)  
+        else if (strcmp(buf, "-d") == 0)  
         { // Удаление файла;
             deleteFile(comArg.buf1);
              
         } 
-        else if (strcmp(comArg.buf, "-s") == 0)  
+        else if (strcmp(buf, "-s") == 0)  
         { // Подсчет общего размера указанной директории или файла;
             if (strcmp(comArg.buf3,"f")) 
             {
@@ -217,12 +225,12 @@ void *handleClient(void *arg, struct comArg comArg)
             }
 
         } 
-        else if (strcmp(comArg.buf, "-af") == 0)  
+        else if (strcmp(buf, "-af") == 0)  
         { // Отображение всех файлов в указанной директории;
-            displayAllFiles(comArg.buf2, path);
+            displayAllFiles(comArg.buf1, path);
              
         } 
-        else if  (strcmp(comArg.buf, "-ap") == 0)  
+        else if  (strcmp(buf, "-ap") == 0)  
         { // Отображение всех процессов из файловой системы procfs.
             displayProc(path);
            
@@ -232,16 +240,10 @@ void *handleClient(void *arg, struct comArg comArg)
             flag = 1;
         }
         
-
     }
     SendClient(cli, path);
 	path = "The end";
-	write(cli->sockfd, path, strlen(path));
-    close(cli->sockfd);
-    free(cli);
-    pthread_detach(pthread_self());
-
-    return 0;
+	write(cli.sockfd, path, strlen(path));
+    close(cli.sockfd);
 
 }
-*/

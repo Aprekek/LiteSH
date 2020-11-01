@@ -1,5 +1,4 @@
-#include "Clieserv.h"
-
+#include "Clieserv.h"   
 
 void sig_child(int sig) //--функция ожидания завершения дочернего процесса
 {
@@ -10,16 +9,60 @@ void sig_child(int sig) //--функция ожидания завершения
     }
     return;
 }
-    
+
 
 int main(int argc, char *argv[])
 {
-    if (argc != 2)
+    if (argc < 3)
     {
         perror("ERROR, no port provided\n");
+        printf ("Enter arg\n");
         exit(1);
     }
+    char *buf[256];
+    comArg comArg;
+    if (argc == 3)
+    {
+        for(int i = 0; i < strlen(argv[2]); i++)
+            comArg.buf[i] = argv[2][i];
+      
+    }
+    
+    if (argc == 4)
+    {
+        for(int i = 0; i < strlen(argv[2]); i++)
+            comArg.buf[i] = argv[2][i];
+        for(int i = 0; i < strlen(argv[3]); i++)
+            comArg.buf[i] = argv[3][i];
+     
+    }
+    else if (argc == 5)
+    {
+        for(int i = 0; i < strlen(argv[2]); i++)
+            comArg.buf[i] = argv[2][i];
 
+        for(int i = 0; i < strlen(argv[3]); i++)
+            comArg.buf1[i] = argv[3][i];
+
+        for(int i = 0; i < strlen(argv[4]); i++)
+            comArg.buf2[i] = argv[4][i];
+    }
+
+    else if (argc == 6)
+    {
+        for(int i = 0; i < strlen(argv[2]); i++)
+            comArg.buf[i] = argv[2][i];
+
+        for(int i = 0; i < strlen(argv[3]); i++)
+            comArg.buf1[i] = argv[3][i];
+
+        for(int i = 0; i < strlen(argv[4]); i++)
+            comArg.buf2[i] = argv[4][i];
+        
+        for(int i = 0; i < strlen(argv[4]); i++)
+            comArg.buf2[i] = argv[4][i];
+    }
+   
     char *ip = "127.0.0.1";
     int port = atoi(argv[1]);
     int connfd = 0;
@@ -40,78 +83,23 @@ int main(int argc, char *argv[])
 
     //dup2(connfd,1);
   	
-    while(1)
+    printf("%d\n", strlen(comArg.buf));
+    signal(SIGCHLD,sig_child);
+    connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
+    clients cli;
+	cli.addres = clientAddr;
+	cli.sockfd = connfd;
+    pid_t pid; 
+    char re[2];
+    char buff[256];
+    
+    if((pid = fork()) == 0)
     {
-        signal(SIGCHLD,sig_child);
-        connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
-        clients *cli = (clients *)malloc(sizeof(clients));
-	    cli->addres = clientAddr;
-	    cli->sockfd = connfd;
-        pid_t pid; 
-        struct comArg comArg;
-        
-        if((pid = fork()) == 0)
-        {
-            close(server);
-            char count[6];
-            while(1)
-            {
-                int nbytes = read(cli->sockfd, count, 5); 
-                strncat(count, "\0", 1); 
-                printf("%d\n", nbytes);
-
-                if(strcmp(count, "1") == 0) 
-                {
-                    recv(cli->sockfd, comArg.buf, MAX_MSG_LENGTH,0);
-                    printf("%s", comArg.buf);
-              
-                }
-                
-                else if(strcmp(count, "2") == 0) 
-                {
-                    recv(cli->sockfd,comArg.buf, 3, 0);
-                    recv(cli->sockfd,comArg.buf1, MAX_MSG_LENGTH,0);
-                    printf("hello2\n");
-             
-                }
-            
-                else if(strcmp(count, "3") == 0) 
-                {   
-                    recv(cli->sockfd,comArg.buf, 3, 0);
-                    recv(cli->sockfd,comArg.buf1, MAX_MSG_LENGTH,0);
-                    recv(cli->sockfd,comArg.buf2, MAX_MSG_LENGTH,0);
-                    printf("hello3\n");
-                
-                }
-
-                else if(strcmp(count, "4") == 0) 
-                {
-                    recv(cli->sockfd,comArg.buf, 3, 0);
-                    recv(cli->sockfd,comArg.buf1, MAX_MSG_LENGTH,0);
-                    recv(cli->sockfd,comArg.buf3, 3,0);
-                    recv(cli->sockfd,comArg.buf2, MAX_MSG_LENGTH,0);
-                    printf("hello4\n");
-                
-                }
-                else
-                {
-                    exit (EXIT_FAILURE);
-                
-                }
-
-                
-            }
-            
-
-            //handleClient((void *)cli, comArg);
-        }
-       
-                
-            
-
-    }
+        close(server);
+        handleClient(cli, comArg);
+    }             
 	
-    close(connfd);
+    close(cli.sockfd);
     close(server);
     return 0;
 }

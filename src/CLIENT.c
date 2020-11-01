@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     
 	printf("\n**********Welcome**********\n");
 
-
+    /*
     printf("\n Please read");
     printf ("\n ►копирование файла(3 arg);");
     printf("\n *введите путь к файлу и место, куда хотите переместить");
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     printf("\n ►определение размера директории(2 arg);");
     printf("\n *укажите путь до заданной дирректории\n");
 
-    /*printf (►отображение всех процессов вашей ОС(1 arg);
+    printf (►отображение всех процессов вашей ОС(1 arg);
     \n ►создание процесса по его имени(2 arg);
     \n *укажите имя или путь до процесса
     \n ►создание процесса для запуска программы работы с файлами(2 arg);
@@ -49,29 +49,13 @@ int main(int argc, char *argv[])
 
     char buf[1024];
     int i;
+    
     while(1)
     {
-        printf("Enter arg1\n");
-        scanf("%s", &buf[0]);
-        send(sockfd,buf,strlen(buf),0);
-        while(i < atoi(buf))
-        {
-            
-            printf("Enter arg\n");
-            scanf("%s", &buf[0]);
-            send(sockfd,buf,strlen(buf),0);
-            i++;
-            bzero(buf, strlen(buf));
-        }
-        sleep(2);
-        int nread;
-        while(1)
-        {
-            nread = read(sockfd, buf, 256);
-            if (nread== -1)
-                exit (EXIT_FAILURE);
-            
-        }
+    
+        int nreads = read(sockfd, buf, 256);
+        if (nreads!=-1)
+            write (STDOUT_FILENO, buf, strlen(buf));
     }
     
 
