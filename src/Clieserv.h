@@ -22,7 +22,6 @@
 static int cliCount = 0;
 static int uid = 10;
 
-bool flag = 0;
 
 typedef struct 
 {
@@ -50,8 +49,8 @@ void Bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 void Listen(int sockfd, int backlog);
 int Accept(int sickfd, struct sockaddr *addr, socklen_t *addrlen);
 void Connect(int socket, const struct sockaddr *addr, socklen_t addrlen);
-int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq);
-void *handleClient(void *arg);
+//int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq);
+//void handleClient(void *arg), struct comArg comArg);
 void SendClient(void *arg, char *file);
 
 #endif

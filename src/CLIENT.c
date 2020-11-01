@@ -10,9 +10,6 @@ int main(int argc, char *argv[])
     }
     
     int read_size = 0;
-    char buf[256];
-    char command[64];
-    int length;
 	char *ip = "127.0.0.1";
 	int port = atoi(argv[1]);
     struct sockaddr_in server = {0};
@@ -25,21 +22,21 @@ int main(int argc, char *argv[])
     // Connect to Server
     Connect(sockfd, (struct sockaddr *)&server, sizeof server); 
 
+    
 	printf("\n**********Welcome**********\n");
 
 
-    printf("Please read \n");
-
-    printf ("►копирование файла(3 arg);\n");
+    printf("\n Please read");
+    printf ("\n ►копирование файла(3 arg);");
     printf("\n *введите путь к файлу и место, куда хотите переместить");
-    printf("\n ►перемещение файла(3 arg)");
+    printf("\n ►перемещение файла(3 arg);");
     printf("\n *введите путь к файлу и место, куда хотите переместить");
     printf("\n ►удаление файла(2 arg); ");
     printf("\n *введите путь к удаляемому файлу");
     printf("\n ►определение размера файла(2 arg);");
     printf("\n *введите путь к файлу");
-    printf("\n ►определение размера директории(2 arg)");
-    printf("\n *укажите путь до заданной дирректории\n)");
+    printf("\n ►определение размера директории(2 arg);");
+    printf("\n *укажите путь до заданной дирректории\n");
 
     /*printf (►отображение всех процессов вашей ОС(1 arg);
     \n ►создание процесса по его имени(2 arg);
@@ -50,35 +47,33 @@ int main(int argc, char *argv[])
     \n *укажите имя или путь до процесса
     \n ►отображение сигналов вашей ОС(1 arg).\n)*/
 
-
-    int a = 0, i = 0;
-    while (a == 0)
-    {
-        printf("Enter counts parametrs\n");
-        scanf("%d ", a);
-
-    }
-    char b[2];
-    b[0] = a;
-    send(sockfd,b,2,0);
-
-	while(i < a)
-	{
-        fgets(buf,MAX_MSG_LENGTH,stdin);
-		send(sockfd,buf,MAX_MSG_LENGTH,0);
-        i++;
-		bzero(buf, MAX_MSG_LENGTH);
-	}
-	
-    int nread = 0;
-    char buffer[256];
-
+    char buf[1024];
+    int i;
     while(1)
-	{
-        nread = read(sockfd, buffer, 256);
-        if (nread!= -1)
-            write(STDOUT_FILENO, buffer, nread);
-	}
+    {
+        printf("Enter arg1\n");
+        scanf("%s", &buf[0]);
+        send(sockfd,buf,strlen(buf),0);
+        while(i < atoi(buf))
+        {
+            
+            printf("Enter arg\n");
+            scanf("%s", &buf[0]);
+            send(sockfd,buf,strlen(buf),0);
+            i++;
+            bzero(buf, strlen(buf));
+        }
+        sleep(2);
+        int nread;
+        while(1)
+        {
+            nread = read(sockfd, buf, 256);
+            if (nread== -1)
+                exit (EXIT_FAILURE);
+            
+        }
+    }
+    
 
     /*
     int shutdown(int s, int how);

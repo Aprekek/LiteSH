@@ -92,7 +92,7 @@ void printIpAddr(struct sockaddr_in addr)
             (addr.sin_addr.s_addr & 0xff000000) >> 24);
 }
 
-int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq)
+/*int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq)
 {
     int res = pthread_create(thread, attr, start_routine, arq);
     if (res != 0)
@@ -101,7 +101,7 @@ int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_
         exit(1);
     }
     return res;
-}
+}*/
 
 
 void SendClient(void *arg, char *file)
@@ -120,59 +120,13 @@ void SendClient(void *arg, char *file)
 
 }
 
-
-void *handleClient(void *arg)
+/*
+void *handleClient(void *arg, struct comArg comArg)
 {  
-    char count[2];
-    int argc;
-    char *path = "output.txt";
-    clients *cli = (clients *)arg;
-    struct comArg comArg;
-    recv(cli->sockfd,count,2,0);
-    argc = (int) count[0];
+ 	clients *cli = (clients *)arg;
+	bool flag = 0;
+    char *path = "output.txt";                
         
-        switch(argc)
-        {
-            case '1':
-            {
-                recv(cli->sockfd, comArg.buf, MAX_MSG_LENGTH,0);
-                break;
-            }
-                
-            case '2':
-            {
-                recv(cli->sockfd,comArg.buf, 3, 0);
-                recv(cli->sockfd,comArg.buf1, MAX_MSG_LENGTH,0);
-               
-                break;
-            }
-            
-            case '3':
-            {
-                recv(cli->sockfd,comArg.buf, 3, 0);
-                recv(cli->sockfd,comArg.buf1, MAX_MSG_LENGTH,0);
-                recv(cli->sockfd,comArg.buf2, MAX_MSG_LENGTH,0);
-               
-                break;
-            }
-
-            case '4':
-            {
-                recv(cli->sockfd,comArg.buf, 3, 0);
-                recv(cli->sockfd,comArg.buf1, MAX_MSG_LENGTH,0);
-                recv(cli->sockfd,comArg.buf3, 3,0);
-                recv(cli->sockfd,comArg.buf2, MAX_MSG_LENGTH,0);
-                
-                break;
-            }
-            default:
-            {
-                exit (EXIT_FAILURE);
-                
-            }
-                
-        }
-
     //lab3
     // "--help" "-h"; "-l2"; "-p"; strProcBg = "-pb"; "-signal"; "-m"; "-c"; "-d"; "-s"; "-af"; "-ap";
     while(flag == 0)
@@ -181,7 +135,7 @@ void *handleClient(void *arg)
         {
             int fp = open(path, O_WRONLY | O_APPEND);
 	        dup2(fp, 1);
-            Help();
+           printf("Help \n");
         } 
 
         else if(strcmp(comArg.buf, "-p") == 0) 
@@ -281,6 +235,8 @@ void *handleClient(void *arg)
 
     }
     SendClient(cli, path);
+	path = "The end";
+	write(cli->sockfd, path, strlen(path));
     close(cli->sockfd);
     free(cli);
     pthread_detach(pthread_self());
@@ -288,3 +244,4 @@ void *handleClient(void *arg)
     return 0;
 
 }
+*/
