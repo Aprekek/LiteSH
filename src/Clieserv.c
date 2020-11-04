@@ -70,23 +70,28 @@ int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_
 int SendClient(int cli, char *file)
 {
     FILE *fp;
-    int counter = 512;
+    long int size = SizeBufRecv;
+	int counter = 512;
     fp = fopen(file, "r");
-
+	
     if(fp == 0)
     {
         perror("Error: open file for sending");
         return -1;
     }
 
-    char *buffer = (char *)calloc((counter+1), sizeof(char)); 
+    char *buff = (char *)calloc((size, sizeof(char));
+	char *buffer = (char *)calloc((counter + 1, sizeof(char)); 
 
     while(!feof(fp))
     {
-        fgets(buffer, counter, fp);
-        write(cli, buffer, strlen(buffer));
+        fgets(buff, counter, fp);
+        strcat(buffer, buff);
     }
     close(fp);
+	write(cli, buffer, strlen(buffer));
+	free(buff);
+	free(buffer);
 
     return 0;
 }
@@ -95,8 +100,6 @@ int SendClient(int cli, char *file)
 char **getArg(char *arg, int count)
 {
     char sep [10]=" ";
-   // Переменная, в которую будут заноситься начальные адреса частей
-   // строки str
     char *istr; 
 
 	char **istr1 = (char **)calloc(count, sizeof(char));
@@ -130,7 +133,7 @@ void *handleClient(void *arg)
         /*получение количества аргументов*/
         cli->count = operation[0];
         
-        for (int j = 0; j < strlen(operation); j++)
+        for (int j = 0; j < strlen(operation)-2; j++)
             operation[j] = operation[j + 2] 
 
         
