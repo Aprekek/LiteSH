@@ -71,7 +71,7 @@ int SendClient(int cli, char *file)
 {
     FILE *fp;
     long int size = SizeBufRecv;
-	int counter = 512;
+	int counter = MSG_LENGTH ;
     fp = fopen(file, "r");
 	
     if(fp == 0)
