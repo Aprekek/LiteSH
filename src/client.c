@@ -1,6 +1,6 @@
 #include "Clieserv.h"
 #include "filesystem.h"
-#include "process.h"
+
 
 
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
  		printf("\n**********Welcome**********\n");
 
 		printf("Enter operation and param\n");
-		gets(sendBuf);
+		fgets(sendBuf, SizeBufSend, stdin);
 
 
 		if (strcmp(sendBuf, "exit") == 0)
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		if (read(sockfd, recvBuf, SizeBufResv) == -1)
+		if (read(sockfd, recvBuf,SizeBufRecv) == -1)
 		{
 			perror ("ERROR, message can't recieved");
 			break;

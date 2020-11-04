@@ -80,15 +80,15 @@ int SendClient(int cli, char *file)
         return -1;
     }
 
-    char *buff = (char *)calloc((size, sizeof(char));
-	char *buffer = (char *)calloc((counter + 1, sizeof(char)); 
+    char *buff = (char *)calloc(size, sizeof(char));
+	char *buffer = (char *)calloc(counter + 1, sizeof(char)); 
 
     while(!feof(fp))
     {
         fgets(buff, counter, fp);
         strcat(buffer, buff);
     }
-    close(fp);
+    fclose(fp);
 	write(cli, buffer, strlen(buffer));
 	free(buff);
 	free(buffer);
@@ -110,7 +110,7 @@ char **getArg(char *arg, int count)
     for (int i = 1; i < count; i++)
     {
 		istr = strtok (arg,sep);
-        for (int j = ; j < strlen(istr); j++)
+        for (int j = 0; j < strlen(istr); j++)
             istr1[i][j] = istr[j];
     }
 
@@ -127,17 +127,18 @@ void *handleClient(void *arg)
     char *errorBuf = (char *) calloc(MSG_LENGTH, sizeof (char)); 
     char **param;
     
-    while ((nread = read(cli->sockfd, operation, MSG_LENGTH))!= -1)
+    while ((read(cli->sockfd, operation, MSG_LENGTH))!= -1)
     {
         int file;
         /*получение количества аргументов*/
         cli->count = operation[0];
         
         for (int j = 0; j < strlen(operation)-2; j++)
-            operation[j] = operation[j + 2] 
+            operation[j] = operation[j + 2]; 
 
-        
-        if ((file = open("itog.txt", O_RDWR | O_TRUNC | O_APPEND)) = -1)
+        file = open("itog.txt", O_RDWR | O_TRUNC | O_APPEND);
+
+        if (file = -1)
         {
             errorBuf = "error open file\n";
             if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
