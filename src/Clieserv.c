@@ -56,41 +56,6 @@ void Connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
     }
 }
 
-void Inet_pton(int af, const char *src, void *dst)
-{
-    int res = inet_pton(af, src, dst);
-    if (res == 0)
-    {
-        printf("inet_pton failed: src does not contain a character strling representing a valid network addres in specified addres family\n");
-        exit(1);
-    }
-    if (res == -1)
-    {
-        perror("inet_pton failed\n");
-        exit(1);
-    }
-}
-/*
-int Write(int handle, void *buf, int count)
-{
-    int res = write (handle, buf, count);
-    if(res < count || res < 0)
-        {
-            perror("write failed\n");
-            exit(1);
-        }
-    return res;
-}
-*/
-void printIpAddr(struct sockaddr_in addr)
-{
-    printf("%d.%d.%d.%d", 
-            addr.sin_addr.s_addr & 0xff,
-            (addr.sin_addr.s_addr & 0xff00) >> 8,
-            (addr.sin_addr.s_addr & 0xff0000) >> 16,
-            (addr.sin_addr.s_addr & 0xff000000) >> 24);
-}
-
 int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq)
 {
     int res = pthread_create(thread, attr, start_routine, arq);
@@ -102,11 +67,113 @@ int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_
     return res;
 }
 
+int SendClient(int cli, char *file)
+{
+    FILE *fp;
+    int counter = 512;
+    fp = fopen(file, "r");
+
+    if(fp == 0)
+    {
+        perror("Error: open file for sending");
+        return -1;
+    }
+
+    char *buffer = (char *)calloc((counter+1), sizeof(char)); 
+
+    while(!feof(fp))
+    {
+        fgets(buffer, counter, fp);
+        write(cli, buffer, strlen(buffer));
+    }
+    close(fp);
+
+    return 0;
+}
+
+
+char **getArg(char *arg, int count)
+{
+    char sep [10]=" ";
+   // Переменная, в которую будут заноситься начальные адреса частей
+   // строки str
+    char *istr; 
+
+	char **istr1 = (char **)calloc(count, sizeof(char));
+   
+    for(int i = 0; i < count; i++)
+        istr1[i] = (char *)calloc(256, sizeof(char));
+
+    for (int i = 1; i < count; i++)
+    {
+		istr = strtok (arg,sep);
+        for (int j = ; j < strlen(istr); j++)
+            istr1[i][j] = istr[j];
+    }
+
+    return istr1;
+
+}
+
 
 void *handleClient(void *arg)
 {  
     clients *cli = (clients *)arg;
-    //lab3
+    char *operation = (char *) calloc(SizeBufRecv, sizeof (char)); 
+    char *Buf = (char *) calloc(SizeBufRecv, sizeof (char)); 
+    char *errorBuf = (char *) calloc(MSG_LENGTH, sizeof (char)); 
+    char **param;
+    
+    while ((nread = read(cli->sockfd, operation, MSG_LENGTH))!= -1)
+    {
+        int file;
+        /*получение количества аргументов*/
+        cli->count = operation[0];
+        
+        for (int j = 0; j < strlen(operation); j++)
+            operation[j] = operation[j + 2] 
+
+        
+        if ((file = open("itog.txt", O_RDWR | O_TRUNC | O_APPEND)) = -1)
+        {
+            errorBuf = "error open file\n";
+            if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
+                exit(1);
+        }
+        dup2(file, STDOUT_FILENO);
+
+        param = getArg(operation, cli->count);
+
+        startProg(cli->count, param);
+
+        close (file);
+        free(errorBuf);
+
+        if (SendClient(cli->sockfd, "itog.txt") == -1)
+        {
+            errorBuf = "error open file\n";
+            if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
+                exit(1);
+        }
+        
+        free(errorBuf);
+
+        dup2(0, STDOUT_FILENO);
+        close(cli->sockfd);
+        free(cli);
+        pthread_detach(pthread_self());
+
+        bzero(operation, MSG_LENGTH);
+        free(errorBuf);
+
+    }
+    
+
+    return 0;
+
+}
+/*
+//lab3
     char *strH, *strHelp, *strLab2, *strProc, *strProcBg, *strSignal;
     strHelp = "--help";
     strH = "-h";
@@ -199,15 +266,6 @@ void *handleClient(void *arg)
         else {
             puts("Error\n");
             return 0;
-        }
-
-        bzero(buf, MAX_MSG_LENGTH);
-    }
-
-    close(cli->sockfd);
-    free(cli);
-    pthread_detach(pthread_self());
-
-    return 0;
-
-}
+        } 
+    }   
+*/
