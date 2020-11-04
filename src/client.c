@@ -2,16 +2,17 @@
 #include "filesystem.h"
 #include "process.h"
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
+
+
+
+int main(int argc, char *argv[]) 
+{
+    if (argc != 2) 
+	{
         perror("ERROR, no port provided\n");
         exit(1);
     }
     
-    int read_size = 0;
-    char buf[256];
-    char command[64];
-    int length;
 	char *ip = "127.0.0.1";
 	int port = atoi(argv[1]);
     struct sockaddr_in server = {0};
@@ -22,14 +23,45 @@ int main(int argc, char *argv[]) {
     server.sin_port = htons(port);
 
     // Connect to Server
-    Connect(sockfd, (struct sockaddr *)&server, sizeof server); 
+    Connect(sockfd, (struct sockaddr *)&server, sizeof server);
 
-	printf("\n**********Welcome**********\n");
+	while(1)
+	{
+		char *sendBuf = (char *) calloc(SizeBufSend, sizeof (char)); 
+		char *recvBuf = (char *) calloc (SizeBufRecv, sizeof (char));
+ 		printf("\n**********Welcome**********\n");
+
+		printf("Enter operation and param\n");
+		gets(sendBuf);
+
+
+		if (strcmp(sendBuf, "exit") == 0)
+			break;
+
+		if(write (sockfd, sendBuf, strlen(sendBuf)) < 1)
+		{
+			perror ("ERROR, message can't sended");
+			break;
+		}
+
+		if (read(sockfd, recvBuf, SizeBufResv) == -1)
+		{
+			perror ("ERROR, message can't recieved");
+			break;
+		}
+		
+		else 
+			puts(recvBuf);
+
+		free(sendBuf);
+		free(recvBuf);
+	}
+	
     
     // int read_size;
     // char buf[256];
 	
-	while(fgets(buf,MAX_MSG_LENGTH,stdin))
+/*	while(fgets(buf,MAX_MSG_LENGTH,stdin))
 	{
 		send(sockfd,buf,MAX_MSG_LENGTH,0);
 		
@@ -46,6 +78,7 @@ int main(int argc, char *argv[]) {
 		
 	    bzero(buf, MAX_MSG_LENGTH);
 	}	
-	
+*/	
+	close(sockfd);
 	return 0;
 }
