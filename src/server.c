@@ -6,7 +6,7 @@ pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int main(int argc, char *argv[])
 {
-    if (argc != 2)
+    if (argc < 3)
     {
         perror("ERROR, no port provided\n");
         exit(1);
@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
     //listenfd = serverAdr
     struct sockaddr_in serverAdr = {0};
     struct sockaddr_in clientAddr = {0};
-    pthread_t tid;
 
     int server = Socket(AF_INET, SOCK_STREAM, 0); //протокол
     serverAdr.sin_family = AF_INET;
@@ -29,16 +28,18 @@ int main(int argc, char *argv[])
 
     Listen(server, 3);
 	
-    dup2(connfd,1);    //redirect stdout
-     while(1)
-     {
-		socklen_t clieLen = sizeof(clientAddr);
-		connfd = Accept(server, (struct sockaddr *) &clientAddr, &clieLen);
+    while(connfd = accept(server, NULL, (socklen_t *)&clieLen))
+    {
+		socklen_t clieLen = sizeof(sockaddr_in);
+        pthread_t tid;
 		clients *cli = (clients *)malloc(sizeof(clients));
-		cli->addres = clientAddr;
+		
 		cli->sockfd = connfd;
-		Pthread_create(&tid, NULL, &handleClient, (void *)cli);
-     }	
+        cli->argProgram = argv[2];
+
+		Pthread_create(&tid, NULL, handleClient, (void *)cli);
+        pthread_detach(tid);
+    }	
     
     return 0;
 }
