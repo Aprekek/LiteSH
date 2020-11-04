@@ -30,6 +30,12 @@ int displayProc();
 // Display all files
 void displayAllFiles(const char *dirName);
 
+void Help();
+void printReadme();
+void printArguments();
+
+void startProg(int argc, char* argv[]); 
+
 // Size file or dir
 int getFileSize(const char *fileName);
 int getDirSize(const char *dirName);
