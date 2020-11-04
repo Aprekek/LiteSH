@@ -1,12 +1,12 @@
 #include "Clieserv.h"
 #include "filesystem.h" 
-#include "process.h"
+
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int main(int argc, char *argv[])
 {
-    if (argc < 3)
+    if (argc != 2)
     {
         perror("ERROR, no port provided\n");
         exit(1);
@@ -35,7 +35,6 @@ int main(int argc, char *argv[])
 		clients *cli = (clients *)malloc(sizeof(clients));
 		
 		cli->sockfd = connfd;
-        cli->argProgram = argv[2];
 
 		Pthread_create(&tid, NULL, handleClient, (void *)cli);
         pthread_detach(tid);
