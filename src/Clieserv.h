@@ -13,8 +13,8 @@
 #include <string.h>
 #include "filesystem.h"
 
-#define MSG_LENGTH 256
-#define SizeBufRecv 4096 
+#define MSG_LENGTH 512
+#define SizeBufRecv 1024*1024 
 #define SizeBufSend 1024
 
 
