@@ -2,7 +2,7 @@
 
 #define _GNU_SOURCE
 #define PROC_DIRECTORY "/proc/"
-
+#include <string.h>
 using namespace std;
 
 // Copy file
@@ -150,7 +150,7 @@ int getDirSize(const char *dirName)
 		};
 		if(S_ISDIR(st.st_mode)) getDirSize(tmpstr); //проверка на доступность файла
 		else{
-		    //fprintf(stdout, "   %ld: - Filename : %s\n",st.st_size, pdir->d_name); //доп. проверка файлов
+		    //fcout(stdout, "   %ld: - Filename : %s\n",st.st_size, pdir->d_name); //доп. проверка файлов
 		    Size += st.st_size;
 		}
     }
@@ -173,17 +173,17 @@ void printArguments()
 	//cout << "-pb - Putting the process in the background mode"<<endl;
 	//cout << "-signal - Signals from external progmans or OS"<<endl;
 
-    printf("\n Please read");
-    printf ("\n ►копирование файла(3 arg);");
-    printf("\n *введите путь к файлу и место, куда хотите переместить");
-    printf("\n ►перемещение файла(3 arg);");
-    printf("\n *введите путь к файлу и место, куда хотите переместить");
-    printf("\n ►удаление файла(2 arg); ");
-    printf("\n *введите путь к удаляемому файлу");
-    printf("\n ►определение размера файла(2 arg);");
-    printf("\n *введите путь к файлу");
-    printf("\n ►определение размера директории(2 arg);");
-    printf("\n *укажите путь до заданной дирректории\n");
+    cout << "\n Please read";
+    cout <<"\n ►копирование файла(3 arg);";
+    cout <<"\n *введите путь к файлу и место, куда хотите переместить";
+    cout <<"\n ►перемещение файла(3 arg);";
+    cout <<"\n *введите путь к файлу и место, куда хотите переместить";
+    cout <<"\n ►удаление файла(2 arg); ";
+    cout <<"\n *введите путь к удаляемому файлу";
+    cout <<"\n ►определение размера файла(2 arg);";
+    cout <<"\n *введите путь к файлу";
+    cout << "\n ►определение размера директории(2 arg);";
+    cout << "\n *укажите путь до заданной дирректории\n";
 }
 
 void printReadme()
@@ -217,11 +217,12 @@ void startProg(int argc, char* argv[])
 {
     char* file; 
     char* dir;
+   
     file = (char*)malloc(sizeof(char) * 256);
     dir = (char*)malloc(sizeof(char) * 256);
     string str, strFile, strPath;
     string strHelp, strH, strMoving, strCopy, strDelete, strSize, strAllFiles, strAllProc;
-    strHelp = "--help";
+    strHelp = "-help";
     strH = "-h";
     strMoving = "-m";
     strCopy = "-c";
@@ -230,8 +231,11 @@ void startProg(int argc, char* argv[])
     strAllFiles = "-f";
     strAllProc = "-p";
 
+    /*for (int i = 0; i < strlen(argv[1]); i++) 
+            argv[1][i] = argv[1][i];*/
 
-   if (argv[1] == strHelp || argv[1] == strH) 
+ 
+    if (argv[1] == strHelp || argv[1] == strH) 
         { // Help
             Help();
 

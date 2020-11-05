@@ -1,10 +1,6 @@
 #include "Clieserv.h"
 #include "filesystem.h"
 
-
-
-
-
 int main(int argc, char *argv[]) 
 {
     if (argc != 2) 
@@ -25,7 +21,8 @@ int main(int argc, char *argv[])
     // Connect to Server
     Connect(sockfd, (struct sockaddr *)&server, sizeof server);
 
-	while(1)
+	int flag = 0;
+	while(flag ==0)
 	{
 		char *sendBuf = (char *) calloc(SizeBufSend, sizeof (char)); 
 		char *recvBuf = (char *) calloc (SizeBufRecv, sizeof (char));
@@ -36,7 +33,7 @@ int main(int argc, char *argv[])
 
 
 		if (strcmp(sendBuf, "exit") == 0)
-			break;
+			flag = 1;
 
 		if(write (sockfd, sendBuf, strlen(sendBuf)) < 1)
 		{

@@ -40,7 +40,7 @@ int Accept(int sickfd, struct sockaddr *addr, socklen_t *addrlen);
 void Connect(int socket, const struct sockaddr *addr, socklen_t addrlen);
 int Pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arq);
 void *handleClient(void *arg);
-char **getArg(char **arg, char *operation, int count);
+void getArg(char *operation, int count, char **param);
 int SendClient(int cli, char *file);
 
 #endif

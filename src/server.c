@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 		clients *cli = (clients *)malloc(sizeof(clients));
 		
 		cli->sockfd = connfd;
-
+		printf("1\n");
 		Pthread_create(&tid, NULL, handleClient, (void *)cli);
         pthread_detach(tid);
     }	

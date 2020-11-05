@@ -80,8 +80,8 @@ int SendClient(int cli, char *file)
         return -1;
     }
 
-    char *buff = (char *)calloc(size, sizeof(char));
-	char *buffer = (char *)calloc(counter + 1, sizeof(char)); 
+    char *buff = (char *)malloc((counter+1) * sizeof(char));
+	char *buffer = (char *)malloc(size *sizeof(char)); 
 
     while(!feof(fp))
     {
@@ -97,24 +97,23 @@ int SendClient(int cli, char *file)
 }
 
 
-char **getArg(char *arg, int count)
+void getArg(char *operation, int count, char **param)
 {
     char sep [10]=" ";
-    char *istr; 
-
-	char **istr1 = (char **)calloc(count, sizeof(char));
-   
-    for(int i = 0; i < count; i++)
-        istr1[i] = (char *)calloc(256, sizeof(char));
-
-    for (int i = 1; i < count; i++)
+    char *istr = (char *)malloc(MSG_LENGTH* sizeof(char)); 
+	
+    if (count > 1)
     {
-		istr = strtok (arg,sep);
-        for (int j = 0; j < strlen(istr); j++)
-            istr1[i][j] = istr[j];
+        for (int i = 1; i < count; i++)
+        {
+                istr = strtok(operation,sep);
+                cout << istr << endl;
+                for (int j = 0; j < strlen(istr); j++)
+                    param[i][j] = istr[j];
+        }
     }
-
-    return istr1;
+    else 
+        param[1] = operation;
 
 }
 
@@ -122,36 +121,46 @@ char **getArg(char *arg, int count)
 void *handleClient(void *arg)
 {  
     clients *cli = (clients *)arg;
-    char *operation = (char *) calloc(SizeBufRecv, sizeof (char)); 
-    char *Buf = (char *) calloc(SizeBufRecv, sizeof (char)); 
-    char *errorBuf = (char *) calloc(MSG_LENGTH, sizeof (char)); 
-    char **param;
+    char *operation = (char *)  malloc(SizeBufSend * sizeof(char)); 
+    char *errorBuf = (char *) malloc(MSG_LENGTH * sizeof(char));
+    char *op =  (char *) malloc(MSG_LENGTH * sizeof(char)); 
+  
     
     while ((read(cli->sockfd, operation, MSG_LENGTH))!= -1)
     {
         int file;
         /*получение количества аргументов*/
-        cli->count = operation[0];
+        int count =atoi(&operation[0]);
+		
+	
+		char **param = (char **)malloc(count * sizeof(char)); 
+   
+    	for(int i = 0; i < count; i++)
+        	param[i] = (char *) malloc( SizeBufSend* sizeof(char)); 
         
-        for (int j = 0; j < strlen(operation)-2; j++)
-            operation[j] = operation[j + 2]; 
+		for (int j = 0; j < strlen(operation)-3; j++)
+            op[j] = operation[j + 2]; 
 
-        file = open("itog.txt", O_RDWR | O_TRUNC | O_APPEND);
+        file = open("itog.txt",  O_WRONLY | O_APPEND);
 
-        if (file = -1)
+        if (file == -1)
         {
             errorBuf = "error open file\n";
             if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
-                exit(1);
+               exit(1);
         }
-        dup2(file, STDOUT_FILENO);
+		printf("5\n");
+        
+		printf("6\n");
+		getArg(op, count, param);
+		dup2(file, 1);
+		printf("7\n");
 
-        param = getArg(operation, cli->count);
-
-        startProg(cli->count, param);
+        startProg(count, param);
+		printf("8\n");
 
         close (file);
-        free(errorBuf);
+       // free(errorBuf);
 
         if (SendClient(cli->sockfd, "itog.txt") == -1)
         {
@@ -159,16 +168,16 @@ void *handleClient(void *arg)
             if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
                 exit(1);
         }
-        
+        printf("11\n");
         free(errorBuf);
-
+		remove ("itog.txt");
         dup2(0, STDOUT_FILENO);
         close(cli->sockfd);
         free(cli);
         pthread_detach(pthread_self());
 
         bzero(operation, MSG_LENGTH);
-        free(errorBuf);
+     
 
     }
     
