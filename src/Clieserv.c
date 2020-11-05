@@ -71,9 +71,9 @@ int SendClient(int cli, char *file)
 {
     FILE *fp;
     long int size = SizeBufRecv;
-	int counter = MSG_LENGTH ;
+    int counter = MSG_LENGTH ;
     fp = fopen(file, "r");
-	
+
     if(fp == 0)
     {
         perror("Error: open file for sending");
@@ -81,7 +81,7 @@ int SendClient(int cli, char *file)
     }
 
     char *buff = (char *)malloc((counter+1) * sizeof(char));
-	char *buffer = (char *)malloc(size *sizeof(char)); 
+    char *buffer = (char *)malloc(size *sizeof(char));
 
     while(!feof(fp))
     {
@@ -89,9 +89,9 @@ int SendClient(int cli, char *file)
         strcat(buffer, buff);
     }
     fclose(fp);
-	write(cli, buffer, strlen(buffer));
-	free(buff);
-	free(buffer);
+    write(cli, buffer, strlen(buffer));
+    free(buff);
+    free(buffer);
 
     return 0;
 }
@@ -100,46 +100,46 @@ int SendClient(int cli, char *file)
 void getArg(char *operation, int count, char **param)
 {
     char sep [10]=" ";
-    char *istr = (char *)malloc(MSG_LENGTH* sizeof(char)); 
-	
+    char *istr = (char *)malloc(MSG_LENGTH* sizeof(char));
+
     if (count > 1)
     {
         for (int i = 1; i < count; i++)
         {
-                istr = strtok(operation,sep);
-                cout << istr << endl;
-                for (int j = 0; j < strlen(istr); j++)
-                    param[i][j] = istr[j];
+            istr = strtok(operation,sep);
+
+            for (int j = 0; j < strlen(istr); j++)
+                param[i][j] = istr[j];
         }
     }
-    else 
+    else
         param[1] = operation;
 
 }
 
 
 void *handleClient(void *arg)
-{  
+{
     clients *cli = (clients *)arg;
-    char *operation = (char *)  malloc(SizeBufSend * sizeof(char)); 
+    char *operation = (char *)  malloc(SizeBufSend * sizeof(char));
     char *errorBuf = (char *) malloc(MSG_LENGTH * sizeof(char));
-    char *op =  (char *) malloc(MSG_LENGTH * sizeof(char)); 
-  
-    
+    char *op =  (char *) malloc(MSG_LENGTH * sizeof(char));
+
+
     while ((read(cli->sockfd, operation, MSG_LENGTH))!= -1)
     {
         int file;
         /*получение количества аргументов*/
         int count =atoi(&operation[0]);
-		
-	
-		char **param = (char **)malloc(count * sizeof(char)); 
-   
-    	for(int i = 0; i < count; i++)
-        	param[i] = (char *) malloc( SizeBufSend* sizeof(char)); 
-        
-		for (int j = 0; j < strlen(operation)-3; j++)
-            op[j] = operation[j + 2]; 
+
+
+        char **param = (char **)malloc(count * sizeof(char));
+
+        for(int i = 0; i < count; i++)
+            param[i] = (char *) malloc( SizeBufSend* sizeof(char));
+
+        for (int j = 0; j < strlen(operation)-3; j++)
+            op[j] = operation[j + 2];
 
         file = open("itog.txt",  O_WRONLY | O_APPEND);
 
@@ -147,20 +147,20 @@ void *handleClient(void *arg)
         {
             errorBuf = "error open file\n";
             if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
-               exit(1);
+                exit(1);
         }
-		printf("5\n");
-        
-		printf("6\n");
-		getArg(op, count, param);
-		dup2(file, 1);
-		printf("7\n");
+        printf("5\n");
+
+        printf("6\n");
+        getArg(op, count, param);
+        dup2(file, 1);
+        printf("7\n");
 
         startProg(count, param);
-		printf("8\n");
+        printf("8\n");
 
         close (file);
-       // free(errorBuf);
+        // free(errorBuf);
 
         if (SendClient(cli->sockfd, "itog.txt") == -1)
         {
@@ -168,19 +168,19 @@ void *handleClient(void *arg)
             if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
                 exit(1);
         }
-        printf("11\n");
+
         free(errorBuf);
-		remove ("itog.txt");
+        remove ("itog.txt");
         dup2(0, STDOUT_FILENO);
         close(cli->sockfd);
         free(cli);
         pthread_detach(pthread_self());
 
         bzero(operation, MSG_LENGTH);
-     
+
 
     }
-    
+
 
     return 0;
 
@@ -202,7 +202,7 @@ void *handleClient(void *arg)
     strSize = "-s";
     strAllFiles = "-af";
     strAllProc = "-ap";
-    
+
     char bufCopy[MAX_MSG_LENGTH];
     char buf[MAX_MSG_LENGTH];
     char buf1[MAX_MSG_LENGTH];
@@ -211,9 +211,9 @@ void *handleClient(void *arg)
     while(1)
     {
         recv(cli->sockfd,bufCopy, MAX_MSG_LENGTH,0);
-        for (int i = 0; i < strlen(bufCopy) - 1; i++) 
+        for (int i = 0; i < strlen(bufCopy) - 1; i++)
             buf[i] = bufCopy[i];
-        
+
         if (strcmp(buf, strH) == 0) // Help
             //Help();
             puts("Hello\n");
@@ -230,7 +230,7 @@ void *handleClient(void *arg)
                 puts("Error\n");
         }
         else if (strcmp(buf, strSignal) == 0) {
-            catchSignal();   
+            catchSignal();
         }
         else if (strcmp(buf, strMoving) == 0) { // Перемещение файла;
             puts ("Enter file name or path to file!: \n");
@@ -279,6 +279,6 @@ void *handleClient(void *arg)
         else {
             puts("Error\n");
             return 0;
-        } 
-    }   
+        }
+    }
 */
