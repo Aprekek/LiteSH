@@ -6,7 +6,8 @@
 using namespace std;
 
 // Copy file
-void copyFile(string path, string fileName) {
+void copyFile(string path, string fileName) 
+{
     int pos;
     string newFileName;
     pos = fileName.rfind("/");
@@ -14,7 +15,7 @@ void copyFile(string path, string fileName) {
     if (pos != -1) {
         newFileName = fileName.substr(pos + 1);
         path = path + "/" + newFileName;
-    } else 
+    } else
         path = path + "/" + fileName;
 
     ifstream file (fileName, ios_base::in | ios_base::binary);
@@ -24,21 +25,23 @@ void copyFile(string path, string fileName) {
         newFile << file.rdbuf();
     else
         cout << "File or dir opening error" << endl;
-    
+
     file.close();
     newFile.close();
 }
 // Copy file
 
 // Move file
-void moveFile(string path, string fileName) {
+void moveFile(string path, string fileName) 
+{
     copyFile(path, fileName);
     deleteFile(fileName);
 }
 // Move file
 
 // Delete file
-void deleteFile(string fileName) {
+void deleteFile(string fileName) 
+{
     const char *str = fileName.c_str();
 
     if (remove(str) != 0)
@@ -68,7 +71,7 @@ int displayProc()
         return (pid_t)-2 ;
     }
 
-    while ((dirEntity = readdir(dir_proc)) != 0) 
+    while ((dirEntity = readdir(dir_proc)) != 0)
     {
         if (dirEntity->d_type == DT_DIR) {
             if (IsNumeric(dirEntity->d_name)) {
@@ -96,23 +99,23 @@ void displayAllFiles(const char *dirName)
     dir = opendir(dirName);
     struct stat st;
     char *tmpstr; //буфер пути
-	if(pdir == NULL)
-	{
-	    perror("Something happened trying to open directory");
-	    exit(1);
-	}
-	while((pdir = readdir(dir)) != NULL) 
-	{
-		if(pdir->d_name[0] == '.') continue;
-		asprintf(&tmpstr, "%s/%s", dirName, pdir->d_name);//выводит и сразу же записывает в памяти директорию, в которую заходит, с указанием её пути
-		if(lstat(tmpstr, &st) != 0)//ошибка про чтении файла
-		{
-		    perror("Something happened with file.");
-		    exit(1);
-		};
-		if(S_ISDIR(st.st_mode)) displayAllFiles(tmpstr); //проверка на доступность файла
-		else
-            cout << "Filename "<< pdir->d_name << endl;	
+    if(pdir == NULL)
+    {
+        perror("Something happened trying to open directory");
+        exit(1);
+    }
+    while((pdir = readdir(dir)) != NULL)
+    {
+        if(pdir->d_name[0] == '.') continue;
+        asprintf(&tmpstr, "%s/%s", dirName, pdir->d_name);//выводит и сразу же записывает в памяти директорию, в которую заходит, с указанием её пути
+        if(lstat(tmpstr, &st) != 0)//ошибка про чтении файла
+        {
+            perror("Something happened with file.");
+            exit(1);
+        };
+        if(S_ISDIR(st.st_mode)) displayAllFiles(tmpstr); //проверка на доступность файла
+        else
+            cout << "Filename "<< pdir->d_name << endl;
     }
 }
 // Display all files
@@ -134,44 +137,44 @@ int getDirSize(const char *dirName)
     long Size = 0;
     char *tmpstr; //буфер пути
     dir = opendir(dirName);
-	if(dir == NULL)
-	{
-	    perror("Something happened trying to open directory");
-	    exit(1);
-	}
-	while((pdir = readdir(dir)) != NULL) 
-	{
-		if(pdir->d_name[0] == '.') continue;
-		asprintf(&tmpstr, "%s/%s", dirName, pdir->d_name);//выводит и сразу же записывает в памяти директорию, в которую заходит, с указанием её пути
-		if(lstat(tmpstr, &st) != 0)//ошибка про чтении файла
-		{
-		    perror("Something happened with file.");
-		    exit(1);
-		};
-		if(S_ISDIR(st.st_mode)) getDirSize(tmpstr); //проверка на доступность файла
-		else{
-		    //fcout(stdout, "   %ld: - Filename : %s\n",st.st_size, pdir->d_name); //доп. проверка файлов
-		    Size += st.st_size;
-		}
+    if(dir == NULL)
+    {
+        perror("Something happened trying to open directory");
+        exit(1);
+    }
+    while((pdir = readdir(dir)) != NULL)
+    {
+        if(pdir->d_name[0] == '.') continue;
+        asprintf(&tmpstr, "%s/%s", dirName, pdir->d_name);//выводит и сразу же записывает в памяти директорию, в которую заходит, с указанием её пути
+        if(lstat(tmpstr, &st) != 0)//ошибка про чтении файла
+        {
+            perror("Something happened with file.");
+            exit(1);
+        };
+        if(S_ISDIR(st.st_mode)) getDirSize(tmpstr); //проверка на доступность файла
+        else {
+            //fcout(stdout, "   %ld: - Filename : %s\n",st.st_size, pdir->d_name); //доп. проверка файлов
+            Size += st.st_size;
+        }
     }
     return Size;
 }
 
-   
+
 void printArguments()
 {
-	cout << "-h"<<endl;
+    cout << "-h"<<endl;
     cout << "-help"<< endl;
     cout << "-m - Move files"<<endl;
-	cout << "-c - Copying file"<<endl;
-	cout << "-d - File deletion"<<endl;
-	cout << "-s - Calculating the total size of the specified directory or file"<<endl;
-	cout << "-f - Displaying all files in the specified directory"<<endl;
-	cout << "-p - Displaying all processes from the procfs file system"<<endl;
-	//cout << "-l2 - Calling a line for entering project call commands"<<endl;
-	//cout << "-p - A product of the process by its name"<<endl;
-	//cout << "-pb - Putting the process in the background mode"<<endl;
-	//cout << "-signal - Signals from external progmans or OS"<<endl;
+    cout << "-c - Copying file"<<endl;
+    cout << "-d - File deletion"<<endl;
+    cout << "-s - Calculating the total size of the specified directory or file"<<endl;
+    cout << "-f - Displaying all files in the specified directory"<<endl;
+    cout << "-p - Displaying all processes from the procfs file system"<<endl;
+    //cout << "-l2 - Calling a line for entering project call commands"<<endl;
+    //cout << "-p - A product of the process by its name"<<endl;
+    //cout << "-pb - Putting the process in the background mode"<<endl;
+    //cout << "-signal - Signals from external progmans or OS"<<endl;
 
     cout << "\n Please read";
     cout <<"\n ►копирование файла(3 arg);";
@@ -189,35 +192,35 @@ void printArguments()
 void printReadme()
 {
     cout << "This program performs the following functions:"<<endl<<
-    "*copying a file;"<<endl<<  
-    "*moving a file;" <<endl<<  
-    "*deleting a file;"<<endl<<
-    "*calculating the total size of a directory or file; "<<endl<<
-    "*displaying all file system processes;" <<endl<<
-    "*displaying all files in a directory."<<endl<<
-    "Check the appropriate arguments before starting!"<<endl<< 
-    "*calling a line for entering project call commands;"<<endl<<  
-    "*a product of the process by its name;" <<endl<<  
-    "*return to the command line;"<<endl<<
-    "*putting the process in the background mode; "<<endl<<
-    "*receive and process signals from external programs and the operating system;" <<endl<<
-    "Check the appropriate arguments before starting!"<<endl;
+         "*copying a file;"<<endl<<
+         "*moving a file;" <<endl<<
+         "*deleting a file;"<<endl<<
+         "*calculating the total size of a directory or file; "<<endl<<
+         "*displaying all file system processes;" <<endl<<
+         "*displaying all files in a directory."<<endl<<
+         "Check the appropriate arguments before starting!"<<endl<<
+         "*calling a line for entering project call commands;"<<endl<<
+         "*a product of the process by its name;" <<endl<<
+         "*return to the command line;"<<endl<<
+         "*putting the process in the background mode; "<<endl<<
+         "*receive and process signals from external programs and the operating system;" <<endl<<
+         "Check the appropriate arguments before starting!"<<endl;
 }
 
 void Help()
 {
     printReadme();
     printArguments();
-    cout << "By: Пинов Даниил Игоревич \n Есикова Анастасия Дмитриевна \n Лепёхин Даниил Александрович"<< endl; 
+    cout << "By: Пинов Даниил Игоревич \n Есикова Анастасия Дмитриевна \n Лепёхин Даниил Александрович"<< endl;
 }
 
 
 
-void startProg(int argc, char* argv[]) 
+void startProg(int argc, char* argv[])
 {
-    char* file; 
+    char* file;
     char* dir;
-   
+
     file = (char*)malloc(sizeof(char) * 256);
     dir = (char*)malloc(sizeof(char) * 256);
     string str, strFile, strPath;
@@ -231,69 +234,68 @@ void startProg(int argc, char* argv[])
     strAllFiles = "-f";
     strAllProc = "-p";
 
-    /*for (int i = 0; i < strlen(argv[1]); i++) 
-            argv[1][i] = argv[1][i];*/
 
- 
-    if (argv[1] == strHelp || argv[1] == strH) 
-        { // Help
-            Help();
+    if (argv[1] == strHelp || argv[1] == strH)
+    {   // Help
+        Help();
 
-        } else if (argv[1] == strMoving) { // Перемещение файла;
-            /*cout << "Enter file name or path to file: ";
-            cin >> strFile;
-            cout << "Enter path to dir moving: ";
-            cin >> strPath;*/
-            strPath = argv[2]; strFile = argv[3];
-            moveFile(strPath, strFile);
-            
-            
-        } else if (argv[1] == strCopy) 
-        { // Копирование файла;
-            /*cout << "Enter file name or path to file: ";
-            cin >> strFile;
-            cout << "Enter path to dir copy: ";
-            cin >> strPath;*/
-            strPath = argv[2]; strFile = argv[3];
-            copyFile(strPath, strFile);
+    } else if (argv[1] == strMoving) { // Перемещение файла;
+        /*cout << "Enter file name or path to file: ";
+        cin >> strFile;
+        cout << "Enter path to dir moving: ";
+        cin >> strPath;*/
+        strPath = argv[2];
+        strFile = argv[3];
+        moveFile(strPath, strFile);
 
-        } else if (argv[1] == strDelete) 
-        { // Удаление файла;
-            /*cout << "Enter file name or path to file: ";
-            cin >> strFile;*/
-            strFile = argv[3];
-            deleteFile(strFile);
 
-        } else if (argv[1] == strSize) 
-        { // Подсчет общего размера указанной директории или файла;
-            /*cout << "File or Dir" << endl;
-            cout << "If file - enter 'f'" << endl;
-            cout << "If dir - enter 'd'" << endl;
-            */
-            str = argv[2];
+    } else if (argv[1] == strCopy)
+    {   // Копирование файла;
+        /*cout << "Enter file name or path to file: ";
+        cin >> strFile;
+        cout << "Enter path to dir copy: ";
+        cin >> strPath;*/
+        strPath = argv[2];
+        strFile = argv[3];
+        copyFile(strPath, strFile);
 
-            if (str == "f") 
-            {
-                //cout << "Enter file name or path to file: ";
-                file = argv[3];
-                cout << getFileSize(file) << " Byte" << endl;
-            } else if (str == "d") {
-               // cout << "Enter path to the dir: ";
-                dir =  argv[3];
-                cout << getDirSize(dir) << " Byte" << endl;
-            } else {
-                cout << "Incorrect arguments" << endl;
-            }
+    } else if (argv[1] == strDelete)
+    {   // Удаление файла;
+        /*cout << "Enter file name or path to file: ";
+        cin >> strFile;*/
+        strFile = argv[3];
+        deleteFile(strFile);
 
-        } else if (argv[1] == strAllFiles) 
-        { // Отображение всех файлов в указанной директории;
-            //cout << "Enter path to the dir: ";
-            dir = argv[2];
-            displayAllFiles(dir);
+    } else if (argv[1] == strSize)
+    {   // Подсчет общего размера указанной директории или файла;
+        /*cout << "File or Dir" << endl;
+        cout << "If file - enter 'f'" << endl;
+        cout << "If dir - enter 'd'" << endl;
+        */
+        str = argv[2];
 
-        } else if (argv[1] == strAllProc) 
-        { // Отображение всех процессов из файловой системы procfs.
-            displayProc();
+        if (str == "f")
+        {
+            //cout << "Enter file name or path to file: ";
+            file = argv[3];
+            cout << getFileSize(file) << " Byte" << endl;
+        } else if (str == "d") {
+            // cout << "Enter path to the dir: ";
+            dir =  argv[3];
+            cout << getDirSize(dir) << " Byte" << endl;
+        } else {
+            cout << "Incorrect arguments" << endl;
         }
+
+    } else if (argv[1] == strAllFiles)
+    {   // Отображение всех файлов в указанной директории;
+        //cout << "Enter path to the dir: ";
+        dir = argv[2];
+        displayAllFiles(dir);
+
+    } else if (argv[1] == strAllProc)
+    {   // Отображение всех процессов из файловой системы procfs.
+        displayProc();
+    }
 
 }
