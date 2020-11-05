@@ -161,7 +161,7 @@ int getDirSize(const char *dirName)
 void printArguments()
 {
 	cout << "-h"<<endl;
-    cout << "--help"<< endl;
+    cout << "-help"<< endl;
     cout << "-m - Move files"<<endl;
 	cout << "-c - Copying file"<<endl;
 	cout << "-d - File deletion"<<endl;
