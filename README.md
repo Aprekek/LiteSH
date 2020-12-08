@@ -37,7 +37,7 @@
 ><br>1 -help
 <br>
 <br>К тому же, чтобы лишний раз не открывать данный файл, вы можете вызвать справку. Её меню подскажет вам, как использовать ту или иную функцию, содержащуюся в данном проекте.
-><br> l2 - Calling a line for entering project call commands;
+><br>l2 - Calling a line for entering project call commands;
 ><br>-p - A product of the process by its name;
 ><br>-pb - Putting the process in the background mode;
 ><br>-signal - Signals from external progmans or OS.
