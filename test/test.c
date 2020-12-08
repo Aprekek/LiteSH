@@ -3,8 +3,8 @@
 
 CTEST(filesystem, getFileSize)
 {
-    int expected = 1744;
-    int result = 1744;
+    int expected = 3432;
+    int result = getFileSize("./main.c");
 
     ASSERT_EQUAL(expected, result);
 }
