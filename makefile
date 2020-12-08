@@ -43,7 +43,7 @@ build:
 build/test:
 	mkdir build/test
 
-project_test: 
+projectTest: 
 	./project_test
 
 clean:
