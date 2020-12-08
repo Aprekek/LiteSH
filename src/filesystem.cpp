@@ -171,10 +171,6 @@ void printArguments()
     cout << "-s - Calculating the total size of the specified directory or file"<<endl;
     cout << "-f - Displaying all files in the specified directory"<<endl;
     cout << "-p - Displaying all processes from the procfs file system"<<endl;
-    //cout << "-l2 - Calling a line for entering project call commands"<<endl;
-    //cout << "-p - A product of the process by its name"<<endl;
-    //cout << "-pb - Putting the process in the background mode"<<endl;
-    //cout << "-signal - Signals from external progmans or OS"<<endl;
 
     cout << "\n Please read";
     cout <<"\n ►копирование файла(3 arg);";
@@ -214,8 +210,6 @@ void Help()
     cout << "By: Пинов Даниил Игоревич \n Есикова Анастасия Дмитриевна \n Лепёхин Даниил Александрович"<< endl;
 }
 
-
-
 void startProg(int argc, char* argv[])
 {
     char* file;
@@ -234,67 +228,39 @@ void startProg(int argc, char* argv[])
     strAllFiles = "-f";
     strAllProc = "-p";
 
-
-    if (argv[1] == strHelp || argv[1] == strH)
-    {   // Help
+    if (argv[1] == strHelp || argv[1] == strH) {
         Help();
-
     } else if (argv[1] == strMoving) { // Перемещение файла;
-        /*cout << "Enter file name or path to file: ";
-        cin >> strFile;
-        cout << "Enter path to dir moving: ";
-        cin >> strPath;*/
         strPath = argv[2];
         strFile = argv[3];
         moveFile(strPath, strFile);
 
-
-    } else if (argv[1] == strCopy)
-    {   // Копирование файла;
-        /*cout << "Enter file name or path to file: ";
-        cin >> strFile;
-        cout << "Enter path to dir copy: ";
-        cin >> strPath;*/
+    } else if (argv[1] == strCopy) {   
         strPath = argv[2];
         strFile = argv[3];
         copyFile(strPath, strFile);
 
-    } else if (argv[1] == strDelete)
-    {   // Удаление файла;
-        /*cout << "Enter file name or path to file: ";
-        cin >> strFile;*/
+    } else if (argv[1] == strDelete) {   // Удаление файла;
         strFile = argv[3];
         deleteFile(strFile);
 
-    } else if (argv[1] == strSize)
-    {   // Подсчет общего размера указанной директории или файла;
-        /*cout << "File or Dir" << endl;
-        cout << "If file - enter 'f'" << endl;
-        cout << "If dir - enter 'd'" << endl;
-        */
+    } else if (argv[1] == strSize) {   // Подсчет общего размера указанной директории или файла;
         str = argv[2];
-
-        if (str == "f")
-        {
-            //cout << "Enter file name or path to file: ";
+        if (str == "f") {
             file = argv[3];
             cout << getFileSize(file) << " Byte" << endl;
         } else if (str == "d") {
-            // cout << "Enter path to the dir: ";
             dir =  argv[3];
             cout << getDirSize(dir) << " Byte" << endl;
         } else {
             cout << "Incorrect arguments" << endl;
         }
 
-    } else if (argv[1] == strAllFiles)
-    {   // Отображение всех файлов в указанной директории;
-        //cout << "Enter path to the dir: ";
+    } else if (argv[1] == strAllFiles) {   // Отображение всех файлов в указанной директории;
         dir = argv[2];
         displayAllFiles(dir);
 
-    } else if (argv[1] == strAllProc)
-    {   // Отображение всех процессов из файловой системы procfs.
+    } else if (argv[1] == strAllProc) {   // Отображение всех процессов из файловой системы procfs.
         displayProc();
     }
 

@@ -121,30 +121,26 @@ void getArg(char *operation, int count, char **param)
 void *handleClient(void *arg)
 {
     clients *cli = (clients *)arg;
-    char *operation = (char *)  malloc(SizeBufSend * sizeof(char));
-    char *errorBuf = (char *) malloc(MSG_LENGTH * sizeof(char));
-    char *op =  (char *) malloc(MSG_LENGTH * sizeof(char));
+    char *operation = (char *)malloc(SizeBufSend * sizeof(char));
+    char *errorBuf = (char *)malloc(MSG_LENGTH * sizeof(char));
+    char *op = (char *)malloc(MSG_LENGTH * sizeof(char));
 
-
-    while ((read(cli->sockfd, operation, MSG_LENGTH))!= -1)
-    {
+    while ((read(cli->sockfd, operation, MSG_LENGTH)) != -1) {
         int file;
         /*получение количества аргументов*/
-        int count =atoi(&operation[0]);
-
+        int count = atoi(&operation[0]);
 
         char **param = (char **)malloc(count * sizeof(char));
 
-        for(int i = 0; i < count; i++)
-            param[i] = (char *) malloc( SizeBufSend* sizeof(char));
+        for (int i = 0; i < count; i++)
+            param[i] = (char *)malloc(SizeBufSend* sizeof(char));
 
-        for (int j = 0; j < strlen(operation)-3; j++)
+        for (int j = 0; j < strlen(operation) - 3; j++)
             op[j] = operation[j + 2];
 
         file = open("itog.txt",  O_WRONLY | O_APPEND);
 
-        if (file == -1)
-        {
+        if (file == -1) {
             errorBuf = "error open file\n";
             if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
                 exit(1);
@@ -156,14 +152,17 @@ void *handleClient(void *arg)
         dup2(file, 1);
         printf("7\n");
 
+        printf("%s\n", param[0]);
+        printf("%s\n", param[1]);
+        // printf("%s\n", param[2]);
         startProg(count, param);
         printf("8\n");
 
         close (file);
         // free(errorBuf);
 
-        if (SendClient(cli->sockfd, "itog.txt") == -1)
-        {
+        if (SendClient(cli->sockfd, "itog.txt") == -1) {
+            printf("9\n");
             errorBuf = "error open file\n";
             if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
                 exit(1);
@@ -177,108 +176,7 @@ void *handleClient(void *arg)
         pthread_detach(pthread_self());
 
         bzero(operation, MSG_LENGTH);
-
-
     }
-
 
     return 0;
-
 }
-/*
-//lab3
-    char *strH, *strHelp, *strLab2, *strProc, *strProcBg, *strSignal;
-    strHelp = "--help";
-    strH = "-h";
-    strLab2 = "-l2";
-    strProc = "-p";
-    strProcBg = "-pb";
-    strSignal = "-signal";
-   //lab2
-    char *strMoving, *strCopy, *strDelete, *strSize, *strAllFiles, *strAllProc;
-    strMoving = "-m";
-    strCopy = "-c";
-    strDelete = "-d";
-    strSize = "-s";
-    strAllFiles = "-af";
-    strAllProc = "-ap";
-
-    char bufCopy[MAX_MSG_LENGTH];
-    char buf[MAX_MSG_LENGTH];
-    char buf1[MAX_MSG_LENGTH];
-    char buf2[MAX_MSG_LENGTH];
-    char buf3[3];
-    while(1)
-    {
-        recv(cli->sockfd,bufCopy, MAX_MSG_LENGTH,0);
-        for (int i = 0; i < strlen(bufCopy) - 1; i++)
-            buf[i] = bufCopy[i];
-
-        if (strcmp(buf, strH) == 0) // Help
-            //Help();
-            puts("Hello\n");
-        else if (strcmp(buf, strLab2) == 0) {
-            if (launchLab2() != 0)
-                puts("Error\n");
-        }
-        else if(strcmp(buf, strProc) == 0) {
-            if (spawnProcess() != 0)
-                 puts("Error\n");
-        }
-        else if (strcmp(buf, strProcBg) == 0) {
-            if (spawnProcessFone() != 0)
-                puts("Error\n");
-        }
-        else if (strcmp(buf, strSignal) == 0) {
-            catchSignal();
-        }
-        else if (strcmp(buf, strMoving) == 0) { // Перемещение файла;
-            puts ("Enter file name or path to file!: \n");
-            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
-            cout << "Enter path to dir moving: ";
-            recv(cli->sockfd,buf3, MAX_MSG_LENGTH,0);
-            moveFile(buf2, buf3);
-
-        } else if (strcmp(buf, strCopy) == 0)  { // Копирование файла;
-            cout << "Enter file name or path to file: ";
-            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
-            cout << "Enter path to dir copy: ";
-            recv(cli->sockfd,buf3, MAX_MSG_LENGTH,0);
-            copyFile(buf2, buf3);
-
-        } else if (strcmp(buf, strDelete) == 0)  { // Удаление файла;
-            cout << "Enter file name or path to file: ";
-            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
-            deleteFile(buf2);
-        } else if (strcmp(buf, strSize) == 0)  { // Подсчет общего размера указанной директории или файла;
-            cout << "File or Dir" << endl;
-            cout << "If file - enter 'f'" << endl;
-            cout << "If dir - enter 'd'" << endl;
-            recv(cli->sockfd,buf3, 3,0);
-
-            if (buf3 == "f") {
-                puts("Enter file name or path to file: ");
-                 recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
-                cout << getFileSize(buf2) << " Byte" << endl;
-            } else if (buf3 == "d") {
-                cout << "Enter path to the dir: ";
-                recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
-                cout << getDirSize(buf2) << " Byte" << endl;
-            } else {
-                cout << "Incorrect arguments" << endl;
-            }
-
-        } else if (strcmp(buf, strAllFiles) == 0)  { // Отображение всех файлов в указанной директории;
-            cout << "Enter path to the dir: ";
-            recv(cli->sockfd,buf2, MAX_MSG_LENGTH,0);
-            displayAllFiles(buf2);
-
-        } else if  (strcmp(buf, strAllProc) == 0)  { // Отображение всех процессов из файловой системы procfs.
-            displayProc();
-        }
-        else {
-            puts("Error\n");
-            return 0;
-        }
-    }
-*/
