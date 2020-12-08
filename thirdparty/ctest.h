@@ -498,8 +498,8 @@ int ctest_main(int argc, const char *argv[])
                 int result = setjmp(ctest_err);
                 if (result == 0) {
                     if (test->setup && *test->setup) (*test->setup)(test->data);
-                    if (test->data)
-                        test->run(test->data);
+                    // if (test->data)
+                    //     test->run(test->data);
                     else
                         test->run();
                     if (test->teardown && *test->teardown) (*test->teardown)(test->data);
