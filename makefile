@@ -43,6 +43,9 @@ build:
 build/test:
 	mkdir build/test
 
+project_test: 
+	./project_test
+
 clean:
 	rm -rf build/*.o
 

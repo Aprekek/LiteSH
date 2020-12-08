@@ -3,5 +3,6 @@ dist: xenial
 script:
     - make
     - make test
+    - make project_test
 os: linux
 compiler: g++
