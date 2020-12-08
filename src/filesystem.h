@@ -15,20 +15,20 @@
 using namespace std;
 
 // Copy file
-void copyFile(string path, string fileName);
+int copyFile(string path, string fileName);
 
 // Move file
-void moveFile(string path, string fileName);
+int moveFile(string path, string fileName);
 
 // Delete file
-void deleteFile(string fileName);
+int deleteFile(string fileName);
 
 // All process
 int IsNumeric(const char* ccharptr_CharacterList);
 int displayProc();
 
 // Display all files
-void displayAllFiles(const char *dirName);
+int displayAllFiles(const char *dirName);
 
 void Help();
 void printReadme();

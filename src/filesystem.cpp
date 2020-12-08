@@ -6,7 +6,7 @@
 using namespace std;
 
 // Copy file
-void copyFile(string path, string fileName) 
+int copyFile(string path, string fileName) 
 {
     int pos;
     string newFileName;
@@ -18,34 +18,42 @@ void copyFile(string path, string fileName)
     } else
         path = path + "/" + fileName;
 
-    ifstream file (fileName.c_str(), ios_base::in | ios_base::binary);
-    ofstream newFile (path.c_str(), ios_base::out | ios_base::binary);
+    ifstream file(fileName.c_str(), ios_base::in | ios_base::binary);
+    ofstream newFile(path.c_str(), ios_base::out | ios_base::binary);
 
-    if (file.is_open() && newFile.is_open())
+    if (file.is_open() && newFile.is_open()) {
         newFile << file.rdbuf();
-    else
+        file.close();
+        newFile.close();
+        return 0;
+    } else {
         cout << "File or dir opening error" << endl;
-
-    file.close();
-    newFile.close();
+        return -1;
+    }
 }
 // Copy file
 
 // Move file
-void moveFile(string path, string fileName) 
+int moveFile(string path, string fileName) 
 {
-    copyFile(path, fileName);
-    deleteFile(fileName);
+    if (copyFile(path, fileName) == 0 && deleteFile(fileName) == 0)
+        return 0;
+    else 
+        return -1;
 }
 // Move file
 
 // Delete file
-void deleteFile(string fileName) 
+int deleteFile(string fileName) 
 {
     const char *str = fileName.c_str();
 
-    if (remove(str) != 0)
+    if (remove(str) != 0) {
         cout << "Error delete file" << endl;
+        return 0;
+    } else {
+        return -1;
+    }
 }
 // Delete file
 
@@ -92,31 +100,31 @@ int displayProc()
 
 
 // Display all files
-void displayAllFiles(const char *dirName)
+int displayAllFiles(const char *dirName)
 {
     DIR *dir;
     dirent *pdir;
     dir = opendir(dirName);
     struct stat st;
     char *tmpstr; //буфер пути
-    if(pdir == NULL)
-    {
+    if(pdir == NULL) {
         perror("Something happened trying to open directory");
-        exit(1);
+        return -1;
     }
-    while((pdir = readdir(dir)) != NULL)
-    {
+    while((pdir = readdir(dir)) != NULL) {
         if(pdir->d_name[0] == '.') continue;
         asprintf(&tmpstr, "%s/%s", dirName, pdir->d_name);//выводит и сразу же записывает в памяти директорию, в которую заходит, с указанием её пути
-        if(lstat(tmpstr, &st) != 0)//ошибка про чтении файла
-        {
+        if(lstat(tmpstr, &st) != 0) {
             perror("Something happened with file.");
-            exit(1);
-        };
-        if(S_ISDIR(st.st_mode)) displayAllFiles(tmpstr); //проверка на доступность файла
-        else
+            return -1 ;
+        }
+        if(S_ISDIR(st.st_mode)) 
+            displayAllFiles(tmpstr); //проверка на доступность файла
+        else {
             cout << "Filename "<< pdir->d_name << endl;
+        }
     }
+    return 0;
 }
 // Display all files
 
