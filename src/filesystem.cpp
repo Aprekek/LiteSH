@@ -18,8 +18,8 @@ void copyFile(string path, string fileName)
     } else
         path = path + "/" + fileName;
 
-    ifstream file (fileName, ios_base::in | ios_base::binary);
-    ofstream newFile (path, ios_base::out | ios_base::binary);
+    ifstream file (fileName.c_str(), ios_base::in | ios_base::binary);
+    ofstream newFile (path.c_str(), ios_base::out | ios_base::binary);
 
     if (file.is_open() && newFile.is_open())
         newFile << file.rdbuf();
