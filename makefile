@@ -1,5 +1,7 @@
 PATH_SRC = src/
 PATH_BUILD_SRC = build/
+PATHTEST = test/
+PATHBUILDTEST = build/test/
 
 all: build client server
 
@@ -21,8 +23,25 @@ $(PATH_BUILD_SRC)filesystem.o: $(PATH_SRC)filesystem.cpp
 $(PATH_BUILD_SRC)Clieserv.o: $(PATH_SRC)Clieserv.c
 	g++ -Wall -c $(PATH_SRC)Clieserv.c -o $(PATH_BUILD_SRC)Clieserv.o
 
+test: build build/test project_test
+
+project_test: $(PATHBUILDTEST)main.o $(PATHBUILDTEST)test.o $(PATHBUILDTEST)filesystem.o
+	g++ -Wall $(PATHBUILDTEST)main.o $(PATHBUILDTEST)test.o $(PATHBUILDTEST)filesystem.o -o project_test
+
+$(PATHBUILDTEST)test.o: $(PATHTEST)test.c 
+	g++ -Wall -I thirdparty -I src -c $(PATHTEST)test.c -o $(PATHBUILDTEST)test.o
+
+$(PATHBUILDTEST)main.o: $(PATHTEST)main.c
+	g++ -Wall -I thirdparty -I src -c $(PATHTEST)main.c -o $(PATHBUILDTEST)main.o
+
+$(PATHBUILDTEST)filesystem.o: $(PATH_SRC)filesystem.cpp $(PATH_SRC)filesystem.h
+	g++ -Wall -I thirdparty -I src -c $(PATH_SRC)filesystem.cpp -o $(PATHBUILDTEST)filesystem.o
+
 build:
 	mkdir build
+
+build/test:
+	mkdir build/test
 
 clean:
 	rm -rf build/*.o

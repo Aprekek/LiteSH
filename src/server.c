@@ -1,7 +1,6 @@
 #include "Clieserv.h"
 #include "filesystem.h" 
 
-
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int main(int argc, char *argv[])
