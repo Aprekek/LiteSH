@@ -145,24 +145,17 @@ void *handleClient(void *arg)
             if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
                 exit(1);
         }
-        printf("5\n");
-
-        printf("6\n");
+      
         getArg(op, count, param);
         dup2(file, 1);
-        printf("7\n");
-
-        printf("%s\n", param[0]);
-        printf("%s\n", param[1]);
-        // printf("%s\n", param[2]);
+     
         startProg(count, param);
-        printf("8\n");
+     
 
         close (file);
         // free(errorBuf);
 
         if (SendClient(cli->sockfd, "itog.txt") == -1) {
-            printf("9\n");
             errorBuf = "error open file\n";
             if ((write(cli->sockfd, errorBuf, strlen(errorBuf))) == -1)
                 exit(1);
