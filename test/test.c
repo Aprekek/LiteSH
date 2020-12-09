@@ -39,8 +39,13 @@ CTEST(filesystem, deleteFile)
 
 CTEST(filesystem, copyFile)
 {
+    FILE *test;
+    test = fopen("test4.txt", "w");
+
     int expected = 0;
     int result = copyFile("./test/folder_test/folder_test2", "test4.txt");
+
+    remove("test4.txt");
 
     ASSERT_EQUAL(expected, result);
 }
